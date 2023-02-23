@@ -1,0 +1,131 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 3: Tablas de frecuencias para datos agrupados y representación gráfica.***
+
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+Si tenemos una cantidad grande de datos, como por ejemplo:
+
+- De una variable continua.
+- Una variable discreta con una gran cantidad de valores distribuidos en un intervalo de longitud considerable.
+
+Podemos agrupar por intervalos y hacer una resumen de los datos para facilitar su lectura. Para este propósito veremos en está sección las tablas de frecuencia para datos agrupados.
+
+**Definición [Tabla de Frecuencias]** :  Es un resumen en forma de tabla que muestra el número de elementos $(frecuencia)$ en cada una de las diferentes clases o intervalos.
+
+- Las clases o intervalos deben ser disyuntos.
+
+- En la tabla se muestran las cantidades y los porcentajes de cada una de las medidas.
+
+- Permite conocer la manera en que están distribuidos los datos.
+
+**Observación**   
+
+- Si se toman muy pocos intervalos se pierde información de los datos.
+- Si se toman muchas clases o intervalos se pierde el objetivo de resumir.
+
+| Intervalo o clase $\large{I_i}$  | Frecuencia Absoluta $\large{(n_i)}$|Frecuencia Abs. Acumulada $\large{(N_i)}$ | Frecuencia  Relativa $\large{(f_i=\frac{n_i}{N})}$ | Frecuencia Rel. Acumulada $\large{(F_i)}$| 
+|:-------------------:|:---:|:---:|:---:|:---:|
+| $I_1=[a_1,a_2)$ | $n_1$ : número de elementos en $I_1$ | $N_1=n_1$ | $\large{f_1=\dfrac{n_1}{N}}$ | $\large{F_1=f_1}$  
+| $I_2=[a_2,a_3)$ | $n_2$ : número de elementos en $I_2$ | $N_2=n_1+n_2$ | $\large{f_2=\dfrac{n_2}{N}}$ | $\large{F_2=f_1+f_2}$  
+$\dots$ | $\dots$ | $\dots$ |  $\dots$ | $\dots$ 
+ $I_k=[a_{k-1},a_{k})$ | $n_k$ : número de elementos en $I_k$ | $N_k=n_1+n_2+ \dots + n_k$ | $\large{f_k=\dfrac{n_k}{N}}$ | $\large{F_k}$	
+Total | $N$	| $N_k=n$ | $\large{1}$ | $\large{1}$
+
+Para construir la tabla de frecuencias anterior debemos tener en cuenta los siguientes elementos:
+
+- Determinar el número de clases o intervalos. 
+- Determinar la amplitud de cada intervalo. Por lo generar se toma la misma amplitud para todos los intervalos.
+- Se determinan los intervalos $I_k$. Se debe tener en cuenta que los $I_k$ deben ser disyuntos.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(jsonlite)
+library(DT)
+df <- fromJSON('https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/espectro.json')
+datatable(df)
+```
+```{r}
+temp <- df %>% select(c(1:6))
+str(temp)
+```
+```{r}
+## Vamos a trabajar con la feature 'nivel_exposicion_campos'
+df$nivel_exposicion_campos <- as.numeric(df$nivel_exposicion_campos)
+min_value = min(df$nivel_exposicion_campos)
+max_value = max(df$nivel_exposicion_campos)
+sprintf("Mínimo valor: %.2f", min_value)
+sprintf("Máximo valor: %.2f", max_value)
+```
+
+```{r}
+summary(df$nivel_exposicion_campos)
+```
+```{r}
+df %>% summarise(min = min(nivel_exposicion_campos),
+                 per_25 = quantile(nivel_exposicion_campos,0.25),
+                 mediana = median(nivel_exposicion_campos),
+                 media = mean(nivel_exposicion_campos),
+                 std = sd(nivel_exposicion_campos),
+                 per_75 = quantile(nivel_exposicion_campos, 0.75), 
+                 max = max(nivel_exposicion_campos), .groups="drop")
+```
+En este caso tenemos $1.000$ datos concentrados en el intervalo $[0,7.33]$. Como lo vamos a hacer manualmente, usaremos una partición con $10$ intervalos. Para hacer esta partición analice el siguiente código:
+
+```{r}
+tb_frec <- temp
+tb_frec$nivel_exposicion_campos <- as.numeric(tb_frec$nivel_exposicion_campos)
+tb_frec <- tb_frec %>% mutate(Intervalos = cut(nivel_exposicion_campos, breaks=10)) %>%
+  group_by(Intervalos) %>% summarise(Freq = n())
+## Frecuencia acumulada, relativa y relativa acumulada.
+tb_frec <- tb_frec %>% mutate(Freq_Acum = cumsum(Freq), Freq_Rela = Freq/nrow(df),
+                              Freq_Rel_Acum = cumsum(Freq/nrow(df)))
+datatable(tb_frec)
+```
+
+Lo anterior, es una forma paso a paso de cómo generar una tabla de frecuencias.
+
+## ***Representación gráfica: Histogramas y Ojivas***
+
+En esta sección trabajaremos dos formas de representración de datos agrupados:
+
+- Histogramas.
+- Ojivas.
+
+### ***Histograma.***
+
+Es una gráfica con barras verticales en las que se muestra en el eje $x$ la división en los intervalos o clases de la variable y la altura de cada barra representa el número de elementos presentes en cada intervalo. Con el módulo pandas, podemos usar el método [plot()](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html)
+
+```{r}
+hist(df$nivel_exposicion_campos)
+```
+
+
+Por supuesto podemos generar un mejor plot.
+
+```{r}
+ggplot(df) +
+  aes(x = nivel_exposicion_campos) +
+  geom_histogram(bins = 15, color="black", fill="red") + 
+  labs(x = "Intervalos nivel de exposición", y = "Frecuncia", title = "Histogram")+
+theme(axis.ticks.y = element_blank())
+```
+
+
+## ***Otro módulo gráfico: [plotly](https://plotly.com/ggplot2/).***
+
+```{r message=FALSE}
+library(plotly)
+
+p <-ggplot(df) +
+  aes(x = nivel_exposicion_campos) +
+  geom_histogram(bins = 15, color="black", fill="skyblue") + 
+  labs(x = "Intervalos nivel de exposición", y = "Frecuencia", title = "Histogram")+
+theme(axis.ticks.y = element_blank())
+ggplotly(p)
+
+```
+</div>

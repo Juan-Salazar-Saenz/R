@@ -1,0 +1,68 @@
+```{r}
+rm(list = ls())
+library(DT)
+library(readr)
+url_base= 'https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/'
+name_data <- 'TABLA_PERSONAS.csv'
+url_data <- paste(url_base, name_data, sep = "")
+df <- read_delim(url_data, delim = ";")
+df <- df[-c(1)]
+datatable(df)
+print(dim(df))
+str(df)
+apply(is.na(df), 2, sum)
+datatable(df[is.na(df$SEXO), ])
+```
+
+```{r setup, echo=TRUE}
+library(dplyr)
+frec <- table(df$MARCA_DE_AUTO)
+table_frec <- data.frame(cbind(frec))
+table_frec <- table_frec %>% mutate(frec_rela=frec/sum(frec), frec_porcent = 100*frec/sum(frec)) %>% arrange(desc(frec)) %>% mutate(across(everything(), round, 2))
+datatable(table_frec)
+datatable(table_frec["frec"])
+
+library(ggplot2)
+ggplot(df) +
+  aes(x = MARCA_DE_AUTO) + 
+  geom_bar(fill="skyblue") +
+  labs(x = "Marca vehículo", y = "", title = "Bar-Plot")
+```
+
+```{r pressure, echo=FALSE}
+temp <- table_frec
+temp['MARCA'] <- rownames(temp)
+temp$MARCA <- factor(temp$MARCA, levels = temp$MARCA[order(temp$frec, decreasing = TRUE)])
+##
+ggplot(temp) +
+  aes(MARCA, frec_porcent) +
+  geom_bar(stat = "identity", fill = c("white", "green", "white", "white", "white"),
+           color = "grey") + 
+  labs(x = "\nMarca vehículo", y = "", title = "Presencia en mercado") + 
+  annotate("text", x = 1:5, y = table_frec$frec_porcent + 0.9, label = paste(temp$frec_porcent,"%"))+
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank())
+```
+
+```{r pressure, echo=FALSE}
+ggplot(temp) %>% + 
+  aes(x="", y = frec_porcent, fill = MARCA) +
+  geom_col(color = "black") + 
+  geom_text(aes(label = paste(frec_porcent, "%")),
+            position = position_stack(vjust = 0.5),
+            size = 2.5) +
+  coord_polar(theta = "y") + 
+  scale_fill_manual(values = c("white", "green", "white", "white", "white")) +
+  theme_void()
+```
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
