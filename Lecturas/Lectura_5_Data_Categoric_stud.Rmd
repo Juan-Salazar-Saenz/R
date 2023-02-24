@@ -1,0 +1,235 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 5: Descripción de datos categóricos.***
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+# ***Datos categóricos.***
+
+- Moda.
+- Bar-plot.
+- Pie-plot.
+
+```{r message=FALSE, warning=FALSE}
+rm(list = ls())
+library(tidyverse)
+library(plotly)
+library(DT)
+```
+
+## ***Exploración de datos categóricos.***
+
+Para datos categóricos, las proporciones simples o porcentajes cuentan la historia de los datos.
+
+***Palabras claves:***
+
+***Moda:*** La categoría o valor que ocurre con más frecuencia en un conjunto de datos.
+
+***Valor esperado:*** Cuando las categorías se pueden asociar con un valor numérico, esto da un valor basado en la probabilidad de ocurrencia de una categoría.
+
+***Bar-plot:*** La frecuencia o proporción de cada categoría trazada como barras.
+
+***Pie-plot:*** La frecuencia o proporción de cada categoría representada como cuñas en un pastel.
+
+Obtener un resumen de una variable binaria o una variable categórica con algunas categorías
+es algo bastante fácil: solo calculamos la proporción de 1s, o las proporciones de las categorías.
+
+***Bar-plot:*** Recordemos que los bar-plots son una herramienta visual común para mostrar una única variable categórica. Las categorías se enumeran en el eje $x$ y las frecuencias o proporciones en el eje $y$.
+
+```{r message=FALSE, warning=FALSE}
+aptos <- read_csv('https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/APARTAMENTOS.csv')
+datatable(aptos)
+```
+
+Eliminamos columna no necesaria.
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+aptos$...1<-NULL
+datatable(aptos)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+str(data.frame(aptos))
+```
+
+Revisión de valores nulos:
+
+```{r message=FALSE, warning=FALSE}
+apply(is.na(aptos), 2, sum)
+```
+
+Tabla de frecuencias:
+
+```{r message=FALSE, warning=FALSE}
+## Tenemos información.
+aptos %>% group_by(terminado) %>% 
+  summarise(frecuencias = n()) %>%
+  mutate(frec_porcent = frecuencias/sum(frecuencias)) %>%
+  arrange(desc(frecuencias)) %>%
+  mutate(across(frec_porcent, round, 3))
+```
+
+Un bar-plot de la variable `ubicacion`:
+
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+ggplot(aptos) +
+  aes(x = ubicacion, fill=ubicacion) + 
+  geom_bar() +
+  labs(x = "", y = "", title = "") +
+  theme(axis.text.x = element_blank(), axis.ticks = element_blank())+
+  scale_fill_discrete(name = "Sector de la ciudad")
+```
+
+Por ejemplo, el plot anterior muestra la cantidad de elementos en cada una de las ubicación de los apartamentos en cuestión.
+
+El siguiente plot muestra el porcentaje de los apartamentos en la muestra que están o no terminados.
+
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+aptos %>% 
+  group_by(terminado) %>%
+  summarise(count=n()) %>%
+  mutate(frecuencia=count/sum(count)) %>%
+  mutate(across(frecuencia, round, 3)) %>%
+  ##
+  plot_ly(x = ~terminado, y = ~frecuencia, type = "bar", text = ~count,
+          fillcolor='magenta') %>%
+  layout(title = "Reporte % predios terminados",  
+         #xaxis = list(title = ""),
+         yaxis = list(title = "", showticklabels = F),
+         height = 400, width = 600)
+```
+
+
+***Nota:*** Tenga en cuenta que un bar-plot se parece a un histograma; en un bar-plot, el eje $x$ representa diferentes categorías de una feature de tipo factor, mientras que en un histograma, el eje $x$ representa valores de una sola variable en una escala numérica. Además, en un histograma, las barras normalmente se muestran tocándose entre sí, en un
+bar-plot, las barras se muestran separadas unas de otras.
+Finalmente, la conversión de datos numéricos a categóricos datos es un paso importante y ampliamente utilizado en el análisis de datos, ya que
+reduce la complejidad (y el tamaño) de los datos. Esto ayuda en el descubrimiento de las relaciones entre las características, en particular en las etapas iniciales de un análisis.
+
+***Moda***
+
+La moda es el valor, o valores en caso de empate, que aparece con mayor frecuencia en los datos.
+Por ejemplo, la moda de la ubicación en los apartamentos es 'poblado'. Como otro ejemplo, en la mayor parte de Colombia, la moda de la preferencia religiosa sería católica. La moda es un resumen estadístico simple para datos categóricos, y generalmente no se usa para datos numéricos.
+
+***Valor esperado.***
+
+Un tipo especial de datos categóricos son los datos en los que las categorías representan o pueden asignarse a valores discretos en la misma escala. Un comercializador de una nueva tecnología en la nube, por ejemplo, ofrece dos niveles de servicio, uno a un precio de $\$300/mes$ y otro a $\$50/mes$. El comercializador ofrece seminarios web gratuitos para generar clientes potenciales, y las cifras que tiene la empresa deter,imam que el 5% de los asistentes se inscribirá en el servicio de $\$300$, el $15\%$ se inscribirá en el servicio de $50 servicio, y el 80% no se suscribirá a nada. Estos datos se pueden resumir, para fines financieros, en un único “valor esperado”, que es una forma de media ponderada, en la que los pesos son probabilidades.
+
+El valor esperado se calcula de la siguiente manera:
+
+1. Multiplica cada resultado por su probabilidad de ocurrencia.
+2. Sume estos valores.
+
+En el ejemplo del servicio en la nube, el valor esperado de un asistente al seminario web es, por lo tanto, $\$22,50$ por mes, calculado de la siguiente manera:
+$$EV=(0.05)(300)+(0.15)(50)+(0.80)(0)=22.5$$
+
+El valor esperado es realmente una forma de media ponderada: agrega las ideas de futuras expectativas y pesos de probabilidad, a menudo basados ​​en juicios subjetivos. El valor esperado es un concepto fundamental en la valoración de empresas y el presupuesto de capital, por ejemplo, el valor esperado de cinco años de ganancias de una nueva adquisición, o el ahorros de costos esperados del nuevo software de gestión de pacientes en una clínica.
+
+***Probabilidad.***
+
+Nos referimos anteriormente a la probabilidad de que ocurra un valor. La mayoría de las personas tienen una comprensión intuitiva de la probabilidad y se encuentran con el concepto con frecuencia, pronósticos (la probabilidad de lluvia) o análisis deportivos (la probabilidad de ganar). Por ejemplo si la probabilidades de que un equipo gane es 2 a 1, su probabilidad de ganar es 2/(2+1)= 2/3. Un primer concepto puede ser: la probabilidad de que ocurra un evento es la proporción de veces que ocurrirá si la situación podría repetirse una y otra vez, innumerables veces. La mayoría de las veces se trata de una construcción imaginaria, pero es una comprensión operativa adecuada de la probabilidad.
+
+### ***Ejemplo 1.***
+
+Vamos a generar un reporte de la tabla `APARTAMENTOS.csv`.
+
+Una vista general del dataframe muestra lo siguiente:
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+aptos %>% sample_n(size = 5)
+```
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+str(data.frame(aptos))
+```
+
+El dataset contiene 694 registros en 11 features, sin datos nulos. Tenemos al parecer 7 variables de tipo numérico y 4 character.
+
+Recordemos que `summary()` genera un resumen estadístico básico del dataset:
+
+```{r}
+summary(aptos)
+```
+
+Note que no tenemos ninguna vivienda de estrato 1. Además, tenemos propiedades de hasta 14 alcobas. El rango de los precios va desde 25 unidades monetatrias y hasta las 1700.
+
+¿ Qué sucede con las variables que NO son de tipo numérico?
+
+```{r}
+# aptos %>% select_if(is.character) %>% Seleccionar por tipo columna
+aptos_1 <- aptos%>%mutate_if(is.character, as.factor)
+```
+
+Seleccionemos las variables solo de tipo categórico:
+
+```{r}
+temp <- aptos_1 %>% select_if(is.factor)
+summary(temp)
+```
+
+El resumen anterior, muestra para cada feature categórica un pequeño resumen. Es este se muestran la cantidad de valores únicos en cada feature, así como la moda y la cantidad de ocurrencias de dicha moda. Note que aunque el estrato tiene ingresos numéricos, esta realmente se trabajada con una feature cualitativa ordinal.
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+aptos$estrato <- as.factor(aptos$estrato)
+print("Conteo por estratos:")
+as.data.frame(summary(aptos$estrato))
+```
+
+
+Veamos como se distribuyen los precios en la variable precio en el sector del poblado
+
+```{r}
+aptos %>% filter(ubicacion == "poblado") %>%
+  plot_ly(x = ~precio, type = "histogram", 
+          marker = list(color = "rgb(100,50,100)",line = list(color = "skyblue", width = 1))) %>%
+  layout( barmode="stack", bargap=0.02, title = "Distribución precios aptos: Sector poblado.", yaxis = list(title="Conteo"), template = "plotly_dark")
+```
+
+Ahora, en el sector del centro.
+
+```{r}
+aptos %>% filter(ubicacion == "centro") %>%
+  plot_ly(x = ~precio, nbinsx = 10, type = "histogram",
+          marker = list(color = "rgb(100,50,50)", line = list(color = "skyblue", width = 1))) %>%
+  layout(barmode="stack", bargap=0.02, title = "Distribución precios aptos: Sector centro", 
+         yaxis = list(title="Conteo"), plot_bgcolor = "skyblue")
+```
+
+El plot anterior muestra que la distribución de precios es ***sesgada a la derecha***, es decir la mayor parte de la información se concentra a la izquierda del plot.
+
+Veamos ambos plots en uno solo:
+
+```{r}
+aptos %>% filter(ubicacion %in% c("centro", "poblado")) %>%
+  ggplot() +
+  aes(precio, colour = ubicacion) +
+  geom_density() + 
+  xlim(0, 2500)
+```
+
+```{r}
+aptos %>% filter(ubicacion %in% c("centro", "poblado")) %>%
+  ggplot() +
+  aes(precio, colour = ubicacion) +
+  geom_boxplot() + 
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank())
+```
+
+Más aún, podemos comparar la distribución de todas las ubicaciones:
+
+```{r}
+ggplot(aptos) +
+  aes(x = ubicacion, y = precio) + 
+  geom_boxplot()
+```
+
+Las zonas del 'poblado' y 'laureles' son las más costosas, en contraste 'centro' y 'norte' las que tienen precios más bajos.
+
+### ***Conclusiones:***
+
+Exploramos la descripción de variables categóricas, se observó como estas puedes ser un factor para discriminar grupos y ser comparados.
+
+</div>

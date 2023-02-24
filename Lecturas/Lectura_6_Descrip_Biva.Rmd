@@ -1,0 +1,235 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+##  ***Estadística descriptiva bivariada.***
+
+- Correlación.
+- Scatterplots.
+- Tablas de contingencia.
+
+```{r message=FALSE, warning=FALSE}
+rm(list = ls())
+library(tidyverse)
+library(plotly)
+library(DT)
+library(GGally)
+library(corrplot)
+```
+
+## ***Correlación.***
+
+El análisis exploratorio de datos en muchos proyectos de modelado implica examinar la correlación entre features y entre features y una variable target (variable objetivo). Las features $X$ e $Y$ (cada una con datos numéricos) están correlacionadas positivamente si los valores altos de $X$ corresponde con valores altos de $Y$, de igual forma para los valores bajos. Ahora, si valores altos de $X$ van con valores bajos de $Y$, y viceversa, el diremos que las features están correlacionadas negativamente.
+
+***Palabras claves:***
+
+- **[Coeficiente de correlación:](https://es.wikipedia.org/wiki/Coeficiente_de_correlaci%C3%B3n_de_Pearson)** Una métrica que mide la asociación lineal de features numéricas. Este es un valor entre $-1$ y $+1$.
+
+- ***Matriz de correlación:*** Una tabla donde las features se muestran tanto en filas como en columnas, y en las celdas las correlaciones entre las features.
+
+- ***Scatterplot:*** (Gráfico de dispersión) Un plot en la que el eje $x$ es el valor de una feature y el eje $y$ el valor de la otra. Ambas numéricas.
+
+***Nota:*** Las variables pueden tener una asociación que **no es lineal**, en cuyo caso el coeficiente de correlación de Pearson puede no ser una métrica útil. La relación entre las tasas impositivas y los ingresos
+recaudado es un ejemplo: a medida que las tasas impositivas aumentan desde cero, los ingresos recaudados también aumentan. Sin embargo, una vez que las tasas impositivas alcanzan un nivel alto y se acercan al 100%, la evasión fiscal aumenta y los ingresos fiscales en realidad disminuyen.
+
+## ***Ejemplo 1.***
+
+Vamos a considerar el famoso dataset [mtcars](https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html)
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+#mtcars <- read.table('https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/mtcars.csv', sep = ",",  row.names = 1, dec = ".")
+#col_names<- mtcars[1, ]
+#colnames(mtcars)<- col_names
+#mtcars<- mtcars[2:nrow(mtcars),]
+datatable(mtcars)
+```
+
+Vamos construir la matriz de correlaciones lineales.
+
+```{r}
+#mtcars_num <- mtcars %>% select_if(is.numeric)
+cor_matrix <- round(cor(mtcars), 2)
+datatable(as.data.frame(cor_matrix))
+```
+En todos los casos se muestra la correlación de Pearson, note que la inspección de esta forma es bastante complicada.
+
+```{r message=FALSE, warning=FALSE}
+corrplot(cor_matrix, method="number", type="upper")
+```
+
+
+***Nota:***  Los estadísticos propusieron hace mucho tiempo otros tipos de coeficientes de correlación, como el [rho de Spearman](https://es.wikipedia.org/wiki/Coeficiente_de_correlaci%C3%B3n_de_Spearman) o el [tau de Kendall](https://es.wikipedia.org/wiki/Coeficiente_de_correlaci%C3%B3n_de_rango_de_Kendall). Estos son coeficientes de correlación basados ​​en el rango de los datos. Ya que trabajan con rangos en lugar de valores, estas estimaciones son robustas a valores atípicos
+y puede manejar ciertos tipos de no linealidades. Sin embargo, generalmente nos ceñirmos al coeficiente de correlación de Pearson. El atractivo de las estimaciones basadas en rangos es principalmente para conjuntos de datos más pequeños y pruebas de hipótesis específicas.
+
+#### ***Scatterplots.***
+
+La forma estándar de visualizar la relación entre dos features numéricas es un scatterplot. El eje $x$ representa una feature y el eje $y$ otra, y cada
+punto en el gráfico es un registro.
+
+```{r message=FALSE, warning=FALSE}
+## Dataset iris.
+iris %>% sample_n(size=5)
+```
+
+```{r message=FALSE, warning=FALSE}
+datatable(round(cor(iris[-c(5)]),3))
+```
+
+Veamos el scatterplot:
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+ggplot(iris) + 
+  aes(x = Sepal.Length, y = Sepal.Width) +
+  geom_jitter(color = "red")
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+plot_ly(data = iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species)
+```
+
+
+### ***Ejercicio:***
+
+Encontrar los coeficientes de correlación en las features anteriores por los distintos grupos de especie.
+
+```{r}
+## Solución su código acá
+```
+
+Note que la correlación es este caso es positiva, es decir a mayor longitud de pétalo, mayor ancho del mismo. Vamos a hacer uso de [ggpairs]()
+
+```{r message=FALSE, warning=FALSE}
+ggpairs(iris, columns = 1:4, aes(color = Species, alpha = 0.1))
+```
+
+El paso que puede seguir después de observar una alta correlación, es ajustar una recta de regresión:
+
+```{r message=FALSE, warning=FALSE}
+cor(mtcars[c("wt","mpg")])
+```
+
+```{r message=FALSE, warning=FALSE}
+ggplot(mtcars) +
+  aes(wt, mpg) +
+  geom_point(position = 'jitter', color = "blue") +
+  geom_smooth(method = 'lm', color = "red", se = FALSE)
+```
+
+***Comentarios:***
+
+• El coeficiente de correlación mide la asociación lineal en que dos features numéricas emparejadas.
+
+• El coeficiente de correlación es una métrica estandarizada, por lo que siempre oscila entre
+–1 (correlación negativa perfecta) a +1 (correlación positiva perfecta).
+
+• Un coeficiente de correlación de cero indica que no hay correlación lineal.
+
+## ***Explorando dos o más variables.***
+
+Los estimadores familiares, como la media y la varianza, analizan las features una a la vez (análisis univariante). El análisis de correlación es un método importante que compara dos variables (análisis bivariado). Vamos a analizar estimaciones y gráficos, en más de dos variables (análisis multivariante).
+
+***Palabras claves.***
+
+- ***Tabla de contingencias:*** Un conteo entre los cruces dos o más variables categóricas.
+
+- ***Plot de contorno:*** Un gráfico que muestra la densidad de dos variables numéricas como un mapa topográfico.
+
+- ***Violín plot*** Similar a un diagrama de caja pero mostrando la densidad estimada.
+
+***Plot de contorno.***
+
+Los contornos son esencialmente un mapa topográfico para
+dos variables; cada banda de contorno representa una densidad específica de puntos, aumentando a medida que se acerca a un “pico”.  Hacemos uso de [sns.kdeplot()](https://seaborn.pydata.org/generated/seaborn.kdeplot.html) para su construcción.
+
+```{r message=FALSE, warning=FALSE}
+ggplot(iris) +
+  aes(x = Sepal.Length, y = Sepal.Width) +
+  geom_point() +
+  geom_density_2d()
+```
+
+El plot anterior muestra como los contornos más pequeños tienen una concentración más alta de punto. En contraste los contornos más 'grandes' presentan una densidad de puntos menor, el plot anterior puede dar cuenta que la distribución conjunto en bi-modal, es decir tiene 2 picos.
+
+## ***Dos variables categóricas.***
+
+Una forma útil de resumir dos variables categóricas es una tabla de contingencia, es decir, una tabla de conteo por cruces de categorías.
+
+```{r message=FALSE, warning=FALSE}
+## Dataset con variables categóricas
+lc_loans <- read_csv("https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/lc_loans.csv")
+datatable(head(lc_loans,5))
+```
+
+El dataset anterior contiene el resultado del prestamo (`status`) y el grado (`grade`) donde A es alto y G bajo.
+
+```{r message=FALSE, warning=FALSE}
+lc_loans %>% distinct() %>% arrange(grade)
+```
+
+
+De los valores de la feature 'status' tenemos:
+
+- Fully paid: Pagado en su totalidad.
+- Cuirrent: Al día.
+- late: Retrazado.
+- Charged off: Descargado (No se espera recuperar el dinero).
+
+Vamos a hacer uso de group_by y summarize:
+
+
+```{r message=FALSE, warning=FALSE}
+lc_loans %>% group_by(status, grade) %>%
+  summarize(conteo_por_categoria =  n())
+```
+
+
+Note que a información anterior, aunque cuenta la historia de los datos, sus valores son dificiles de comparar. Se puede observar que cuando el grado es más alto se cumple en la gran mayoría con el pago. En los grados de menor calificación, el incumplimineto aumenta.
+
+También podemos hacer uso de [pd.crosstab():](https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html)
+
+Veamos ahora la tabla por proporción:
+
+## ***Datos categóricos y numéricos.***
+
+```{r message=FALSE, warning=FALSE}
+airline <- read_csv('https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/airline_stats.csv')
+datatable(head(airline, 8))
+```
+
+
+Los box-plots son una forma sencilla de comparar las distribuciones de una feature numérica agrupada de acuerdo con una feature categórica. 
+
+El dataset anterior contiene el porcentaje diario de retrasos de algunas aerolineas.
+
+Las features son:
+
+- `pct_carrier_delay` = `% retraso de la aerolinea`
+- `pct_atc_delay` = `% retraso por control de tráfico`
+- `pct_weater_delay` = `% retraso por clima`
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+ggplot(airline) + 
+  aes(y = pct_carrier_delay, fill=airline) + 
+  geom_boxplot() + 
+  theme(axis.text.x = element_blank(), axis.ticks = element_blank())
+```
+
+**Alaska** se destaca por tener la menor cantidad de retrasos, mientras que **American** tiene la mayor cantidad de retrasos: el cuartil inferior de **American** es más alto que el cuartil superior de **Alaska.**
+
+***Violinplot.***
+
+Un violinplot es una mejora del box-plot ya que traza la estimación de la densidad. La densidad se refleja y se voltea, y la forma resultante se rellena, creando una imagen que se asemeja a un violín. La ventaja de un violinplot es que puede mostrar matices en la distribución que no son perceptibles en un box-plot. Por otro lado, el box-plot muestra claramente los valores atípicos en los datos.
+
+```{r}
+ggplot(airline) +
+  aes(x = airline, y = pct_carrier_delay, fill= airline) +
+  geom_violin()+
+  scale_fill_manual(values = c("red", "blue", "red", "blue", "red", "white"))
+```
+
+
+El plot anterior muestra una concentración en la distribución cercana a cero para **Alaska** y, en menor medida, **Delta**. Este fenomeno, no están obvio en el box-plot.
+
+</div>

@@ -2,9 +2,12 @@
 
 ## **Fundamentos de estadística para analítica de Datos.**
 
+## ***Lectura 4: Medidas estadísticas: Tendencia central.***
+
 ### ***Docente: Luis Andres Campos Maldonado.***
 
 ### ***Medidas estadísticas.***
+
 
 - Medidas de tendencia central
 - Medidas de dispersión.
@@ -27,10 +30,10 @@ library(DT)
 
 - **Mediana:** El valor tal que la mitad de los datos se encuentran por encima de dicho de valor, este representa el _percentil 50._
 
-- **Percentil p:** El valor tal que el $p\%$ de los datos se encuentra debaj.
+- **Percentil p:** El valor tal que el $p\%$ de los datos se encuentra debajo.
 
 - **Media recortada:** El promedio de todos los valores después de descartar un número fijo de valores extremos.
-También conocida como media truncada
+También conocida como media truncada.
 
 - **Robusto:** No sensible a valores extremos.
 
@@ -40,8 +43,7 @@ También conocida como media truncada
 
 Las features con datos numéricos pueden tener miles de valores distintos. El paso básico para explorar estos datos es obtener un "valor típico" para cada feature, una estimación de dónde se encuentra la mayoría de los datos (es decir, su tendencia central).
 
-Resumir datos puede parecer bastante trivial: simplemente tome la media de los datos. De hecho, mientras que la media es fácil de calcular y conveniente de usar, puede no ser siempre la mejor medida para un valor central. Por esta razón, los estadísticos han
-desarrolló y promovió varias estimaciones alternativas a la media.
+Resumir datos puede parecer bastante trivial: simplemente tome la media de los datos. De hecho, mientras que la media es fácil de calcular y conveniente de usar, puede no ser siempre la mejor medida para un valor central. Por esta razón, la estadística ha desarrollado varias estimaciones alternativas a la media.
 
 ***Media o promedio***
 
@@ -50,7 +52,7 @@ suma de todos los valores dividida por el número de valores. La media de una mu
 
 $$\bar{x}=\sum_{i=1}^{n}\frac{x_i}{n}$$
 
-donde los $x_{1}$ son los valores que toma la feature y $n$ es el tamaño de registros.
+donde los $x_{i}$ son los valores que toma la feature y $n$ es el número de registros.
 
 
 **Nota:** En estadística $N$ se refiere a una población y $n$ al tamaño de la muestra.
@@ -71,7 +73,7 @@ $$\text{media ponderada}=\frac{\sum_{i=1}^{n}w_i*x_i}{\sum_{i=1}^{n}w_i}$$
 
 Hay dos motivaciones principales para usar una media ponderada:
 
-• Algunos valores son intrínsecamente más variables que otros y altamente variables. Considere por ejemplo, que estamos tomando el promedio de múltiples sensores y uno de los sensores es menos preciso, entonces podríamos reducir el peso de los datos de ese sensor.
+• Algunos valores son intrínsecamente más variables que otros. Considere por ejemplo, que estamos tomando el promedio de múltiples sensores y uno de los sensores es menos preciso, entonces podríamos reducir el peso de los datos de ese sensor.
 
 • Los datos recogidos no representan por igual a los diferentes colectivos que estamos interesado en medir. Por ejemplo, por la forma en que un experimento en línea
 se llevó a cabo, es posible que no tengamos un conjunto de datos que refleje con precisión todos los grupos en
@@ -166,7 +168,6 @@ Genere un barplot plot con las medias en el eje $y$ y los nombres de las variabl
 ***Respuesta:***
 
 ```{r echo=FALSE}
-## Su código acá.
 ```
 
 ## ***Outliers***
@@ -219,8 +220,7 @@ Las estimaciones de variabilidad más conocidas son la varianza y la desviación
 $$\text{Varianza = }s^{2}=\frac{\sum_{i=1}^{n}(x_i-\bar{x})^{2}}{n-1}$$
 
 $$\text{Desviacion estandar = }s=\sqrt{Varianza}$$
-La desviación estándar es mucho más fácil de interpretar que la varianza ya que está en el misma escala que los datos originales. Aún así, con su fórmula más complicada y menos intuitiva, puede parecer peculiar que la desviación estándar sea preferida en estadística sobre
-la desviación media absoluta, esto se debe a la teoría estadística: matemáticamente, trabajar con valores al cuadrado es mucho más conveniente que con valores absolutos.
+La desviación estándar es mucho más fácil de interpretar que la varianza ya que está en el misma escala que los datos originales. Aún así, con su fórmula más complicada y menos intuitiva, puede parecer peculiar que la desviación estándar sea preferida en estadística sobre la desviación media absoluta, esto se debe a la teoría estadística: matemáticamente, trabajar con valores al cuadrado es mucho más conveniente que con valores absolutos.
 
 ***Nota:***
 
@@ -298,19 +298,19 @@ t(data.frame(percentiles))
 La mediana es de 4 asesinatos por cada 100.000 habitantes, aunque hay bastante variabilidad:
 el percentil 5 es solo $1.6$ y el percentil 95 es $6.51$.
 
-Los boxplots se basan en percentiles y dan una
-manera rápida de visualizar la distribución de datos.
+Los boxplots se basan en percentiles y dan una manera rápida de visualizar la distribución de datos.
 
-```{r}
+```{r message=FALSE, warning=FALSE, echo=FALSE}
 ggplot(df) +
   aes(x = Population, ) + 
   geom_boxplot(fill = "magenta")+
+  ggtitle("Box-Plot") + 
   theme(axis.text.y = element_blank(), axis.ticks = element_blank())
 ```
 
 Con otra librería la gráfica se ve así:
 
-```{r message=FALSE, warning=FALSE, echo=FALSE}
+```{r message=FALSE, warning=FALSE}
 plot_ly(
   data = df,
   x = ~Population,
@@ -318,7 +318,8 @@ plot_ly(
   type = "box",
   text = ~State,
   fillcolor='magenta') %>%
-  layout(title = "Box-plot", yaxis = list(showticklabels = F), height = 400, width = 600)
+  layout(title = "Box-plot", yaxis = list(showticklabels = F), 
+         height = 400, width = 600)
 ```
 
 La parte superior e inferior de la caja son respectivamente el percentil 75 y el 25. La mediana se muestra con la línea horizontal dentro de la caja. Lo que se extiende arriba y abajo de la caja se conocen como bigotes, se extienden desde la parte superior e inferior de la caja hasta indicar el rango para la mayor parte de los datos. Estos gigotes no irá más allá de 1,5 veces el IQR. Cualquier dato fuera de los bigotes se traza como puntos únicos o círculos (a menudo considerados atípicos).
@@ -352,6 +353,5 @@ ggplot(df) +
   aes(x = Murder.Rate) +
   geom_histogram(aes(y = after_stat(density)), fill = "pink", color = "red", bins = 12) +
   geom_density(color = "blue")
-
 ```
 </div>
