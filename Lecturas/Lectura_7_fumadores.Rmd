@@ -1,0 +1,384 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 7: Fumadores.***
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+
+
+Es esta lectura vamos a afianzar los conocimientos ya adquiridos en el análisis exploratorio de datos (**EDA**). Esta lectura se basa en la tabla `fumadores.csv`, la cual contiene información sobre las primas de seguro que se han pagado en una empresa dedicada a esta labor.
+
+
+# ***Ejercicio principal.***
+
+Buscar patrones sobre los costos de atención médica para los fumadores
+
+
+## Introducción
+
+**Contextos** 
+
+1. **Laboral:** Una compañía de seguros de salud desea comprender mejor cómo se han venido ajustando los costos (o cargos) para los fumadores. La compañia desea investigar algunos datos historicos en busca de aclarar las características de los usuarios fumadores de esta empresa, esto como parte de un gran proyecto.
+
+2. **Comercial:** Se busca dar respuesta a la siguiente pregunta: **"¿Que perfil de pago, personal y regional tiene un fumador?"**
+
+3. **Información:** Los datos están en un repositorio público en formato CSV  [(aquí)](https://github.com/lacamposm/Fundamentos_Analitica) llamado `fumadores.csv`. Este contiene la información sobre varias características que pueden afectar los pagos en el seguro de salud.
+
+
+
+## Cargue de los datos
+
+Vamos a cargar las librerias utilizadas, asi como la información.
+
+```{r,echo=TRUE,message=FALSE}
+## Librerias usadas
+#library(psych)
+rm(list = ls())
+library(cowplot)
+library(psych)
+library(tidyverse)
+library(DT)
+```
+
+```{r setup, include=TRUE}
+path<- 'https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/fumadores.csv'
+df<- read.csv2(path, sep = ",", stringsAsFactors = T, na.strings="",dec = ".")
+datatable(head(df,8))
+```
+## Primeros comentarios de la información.
+
+Las varibles tiene la siguiente información:
+
+* **edad:** la edad de la persona en años.
+* **sexo:** hombre o mujer.
+* **bmi:** el Índice de Masa Corporal de la persona
+* **hijos:** el número de hijos que tiene la persona
+* **fumador:** si la persona es fumadora o no
+* **region:** sur_oeste, sur_este, nor_este, nor_oeste, 4 regiones en los Estados Unidos.
+* **prima:** El costo total de la prima del seguro para la persona.
+
+Como es costumbre, vamos a revisar el cargue de la información así como una primeras características del dataframe.
+
+```{r}
+head(df)
+str(df)
+```
+
+Podemos resumir las variables de la siguiente manera:
+
+| **Tipo**         | **Variable**            |
+|:----------------:|:-----------------------:|
+| **Continua**     | bmi, prima              |
+| **Discreta**     | edad, hijos             |
+| **Nominal**      | sexo, fumador, region   |
+| **Ordinal**      |                         |
+
+
+## Estadísticas de resumen para cada variable
+
+
+Recodemos que deseamos determinar el perfil de pago, personal y regional de los fumadores en los EE.UU. Vamos a revisar las **estadísticas de resumen** para cada una de nuestras variables. Debemos enfocarnos en la información sobre los fumadores, no lo olvidemos.
+
+
+### Ejercicio 1.
+
+De la inspección rápida de `summary(df)`, haga los comentario que se destaquen en la información.
+
+```{r}
+summary(df)
+```
+Esta inspección rápida de la tabla nos nuestra que:
+
+* Predominan los hombres en la variable sexo. 
+* Predominan los `no` fumadores.
+* Tenemos edades solo mayores o iguales a los 18 años.
+* La cantidad de registros en cada región es bastante similar, descata que `sur_este` tiene una mayor cantidad que las demás, un poco más del 10% que las otras regiones.
+
+
+### Ejercicio 2. 
+
+Realice gráficos descriptivos (Haga uso de la libreria `ggplot2`) para cada una de la variables en busca de ampliar el conocimiento de la información. Además, realice comentarios adicionales a los ya presentados en el numeral anterior. 
+
+Algunos gráficos descriptivos para buscar ampliar el conocimiento de la información
+
+```{r}
+ggplot(df) +
+  aes(x = sexo) +
+  geom_bar(position = "dodge",fill = "pink3") + 
+  xlab("Genero") + 
+  ylab("Conteo") + 
+  ggtitle("Informacion del sexo")
+```
+
+```{r}
+ggplot(df) +
+  aes(x = region, fill = region) +
+  geom_bar() + 
+  xlab("Regiones") + 
+  ylab("") + 
+  scale_fill_manual(values=c("red3","green1", "purple4","blue1")) +
+  theme(axis.ticks.x = element_blank(),axis.text.x = element_blank()) +
+  ggtitle("Conteo por regiones")
+```
+
+```{r}
+ggplot(df) +
+  aes(x = fumador, fill = fumador) +
+  geom_bar() + 
+  xlab("Supervivencia") + 
+  ylab("Conteo") + 
+  scale_fill_manual(values=c("green2","red4")) +
+  theme(axis.ticks.x = element_blank()) +
+  ggtitle("Fumadores")
+```  
+
+Notemos que solo se observa diferencia marcada en la categoría de `fumador`
+
+---
+
+Vamos ahora a buscar información sobre los `fumadores`, medidas como la media y la mediana, que son medidas de tendencia central, nos proporcionan la idea de cómo se ve el elemento típico (más central) de la variable cuantivativa.
+
+### Ejercicio 3.
+
+Encuentre las medidas destacadas para la varible `prima`. Haga los comentarios que pertinetes.
+
+```{r}
+summary(df$prima)
+```
+
+Notemos que la media del valor de la prima es `US 13270.42`, además sabemos que el 50% paga `US 9382` o menos por concepto de prima, el valor máximo es de `US 63770`, valor bastante lejano de la media y hasta del percentil 75.
+
+### Ejercicio 4.
+
+Construya una tabla donde se muestre el promedio que pagan los fumadores y los no fumadores. Además, determine cual es la diferencia porcental entre ambas medias.
+
+```{r}
+fumadores_mean = df %>% group_by(fumador) %>%
+                 summarise(mean_prima = mean(prima))
+fumadores_mean 
+```
+
+Notemos que la prima promedio pagada por los `fumadores` es mucho más grande que para quienes no fuman. Más aún, del procedimiento:
+
+```{r}
+dife_porc = (fumadores_mean[2,2]/ fumadores_mean[1,2])-1; dife_porc*100
+```
+
+Vemos que los `fumadores` pagan `280.0%` más, que los no fumadores en promedio.
+
+### Ejercicio 5.
+
+Construya un bar plot donde su muestre las porciones de los fumadores dependiendo del género, es decir, un gráfico de `sexo` vs `fumador`.
+
+```{r}
+ggplot(df) +
+  aes(x = fumador, fill = sexo) +
+  geom_bar(position = position_fill(reverse = TRUE), color = 'black')
+```
+
+La gráfica anterior da cuenta que en el dataframe tenemos más `fumadores` hombres que mujeres, es decir, la moda de los `hombres` es ser fumador.
+
+### Ejercicio 6.
+
+Construya una tabla donde se comparen la media, la mediana y los percentiles 25 y 75 para hombres y mujeres fumadoras. ¿Cuál es la diferencia porcentual de los promedios? Y las de las medianas?
+
+```{r}
+df %>% filter(fumador == "si") %>%
+  select(sexo,fumador,prima) %>%
+  group_by(sexo,fumador) %>%
+  summarise(media = mean(prima), mediana = median(prima), percentil_75 = quantile(prima,0.75)) 
+```
+Note que la media de hombres fumadores es más alta que la de las mujeres, así mismo con la mediana y el percentil 75, ¿se podría pensar que los hombres pagan cargos más altos de prima frente a las mujeres?
+
+```{r}
+fumadores = df %>% filter(fumador == "si")
+ggplot(fumadores) +
+     aes(x=prima, color = sexo) +
+     geom_density()
+```
+
+Podemos afirmar que los hombres fumadores tienen una mediana de `US 36085.22` la cual es aproximadamente `24.6%` más alta que la de las mujeres. Además, los hombres fumadores pagan  en promedio `7.70%` más que las mujeres fumadoras ¿Como se obtiene esa conclusión?
+
+```{r}
+valor = (33042.01/30679.0 -1)*100; valor
+```
+
+### Ejercicio 7.
+
+Construya un box-plot de la variable prima en los fumadores, comparando los sexos.
+
+```{r}
+ggplot(fumadores) +
+     aes(x = prima, color = sexo) +
+     geom_boxplot() +
+     theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+```
+
+
+### Ejercicio 8.
+
+Encuentre el rango y el rango intercuartílico de los `fumadores`. Para resolver este ejercicio, genere una tabla de resumen de la información.
+
+
+```{r}
+desc_fuma = df %>% filter(fumador == "si") %>%
+  group_by(fumador) %>%
+  summarise(minimo = min(prima), perc_25 = quantile(prima,0.25), 
+            mediana = median(prima), prec_75 = quantile(prima, 0.75),
+            maximo = max(prima)); desc_fuma
+```
+
+El rango de valores pagados por fumadores va desde `US 12829.46` y hasta `US 63770.43`. El rango intercualtilico es: `US 20193`.
+
+
+## Análisis de valores de las primas por regiones.
+
+
+Recordemos que los histogramas nos pueden servir para comparar las varibles numéricas en la diferentes categorias de una variable. Esto proporciona una ayuda visual a la comprensión de la información entre categorias. 
+
+
+### Ejercicio 9.
+
+Realice un histograma por cada región. **Hint:** Haga uso de la linea adicional `facet_wrap(~ region)` en su ggplot para obtener una parcela con los histogramas de las 4 regiones.
+
+```{r}
+ggplot(df) +
+  aes(x = prima, color = region) +
+  geom_histogram () +
+  ylab (" ") +
+  facet_wrap(~ region) +
+  ggtitle("Histogramas de los valores de las primas por región")
+```
+
+### Ejercicio 10.
+
+Construya una tabla donde se comparen la cantidad, la media, la desviación estrandar, el minimo, el percentil 25, la mediana y el percentil 75 para la variable `prima` discriminada por regiones. Haga los comentarios pertinentes respecto a esta tabla.
+
+```{r}
+df %>% group_by(region) %>%
+  summarise(conteo = n(), media = mean(prima), std
+            = sd(prima), minimo = min(prima), per_25 = quantile(prima,0.25),
+            mediana = median(prima), per_75 = quantile(prima,0.75),
+            maximo = max(prima))
+```
+
+Vemos que la región `sur_este` tiene la mayor cantidad de registros, además de tener la media más alta, el valor máximo y el mayor percentil 75. No podemos a simple vista dar una conclusión frente a si esta es la región con los cargos de prima más altos, (para ello necesitamos inferencia estadística) pero puede ser una buena hipótesis que se podría probar más adelante en el curso.
+
+### Ejercicio 11. 
+
+Realice un box-plot de la variable `prima` comparando las regiones.
+
+```{r}
+ggplot(df) +
+  aes(x = prima, color = region) +
+  geom_boxplot() +
+  ylab (" ") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Histogramas de los valores de las primas por región")
+```
+
+### Ejercicio 12.
+
+Realice una tabla donde se muestre la cantidad y el porcentaje de los fumadores en cada región. Realice los comentarios que corresponde.
+
+No olvidemos nuestro foco, los `fumadores`. Primero determinemos la cantidad de fumadores por region.
+
+```{r}
+df %>% filter(fumador == "si") %>%
+  group_by(region) %>%
+  summarise(conteo = n()) %>%
+  mutate(porcentaje  = round(conteo/sum(conteo)*100,2))
+```
+
+Se observa que en la región `sur_este` es donde se tiene una tasa más alta de fumadores, quizá sea una razón adicional de por que es la región que paga más cargos de prima.
+
+### Relaciones entre variables cuantitativas.
+
+Recordemos que un resumen numérico rápido de una relación entre dos variables cuantitativas es a través del concepto de **coeficiente de correlación de Pearson**. Una correlación positiva significa que a medida que una variable aumenta de valor, la tendencia común es que la otra variable aumenta de valor, mientras que una correlación negativa significa que a medida que una variable aumenta, la otra disminuye. 
+
+Vamos encontrar todas las correlaciones de las variables para aquellos que son `fumadores`.
+
+```{r}
+fumadores = df %>% filter(fumador == "si")
+cuantitativas = c("edad", "bmi", "hijos", "prima" )
+pairs.panels(fumadores[cuantitativas], pch=1, lwd=0.01)
+```
+
+La visión general nuestra que tenemos alta correlación entre `prima` y `bmi`, además para `edad` y `prima`, aunque tenemos un valor pequeño, vale la pena revisar un poco más la situación.
+
+
+### Ejercicio 13.
+
+Realice un scatter plot entre `èdad` vs. `prima``
+
+Veamos los scatter plots por separado.
+
+```{r}
+ggplot(fumadores, colour = "green") +
+  aes(x=edad,y=prima) +
+  geom_jitter(alpha = 1)
+```
+
+Observemos que tenemos una relación lineal positiva, la correlación no es tán alta pues tenemos 2 grupos (clusters), aquellos que pagan más de `US 30000` de prima y quienes pagan menos.
+
+Examinemos un poco cada grupo.
+
+
+### Ejercicio 14.
+
+Construya 2 dataframes, uno con los que pagan más `US 30000` y otro con los de menos de ese valor. Con cada dataframe realice un plot de `pairs.panels()` y comente sus hallazgos.
+
+```{r}
+fuma_higer = fumadores %>% filter(prima >= 30000)
+summary(fuma_higer)
+pairs.panels(fuma_higer[cuantitativas],
+             pch=10, ## forma de los puntos
+             lwd=0.001) ## Intensidad del color de los puntos
+```
+
+En este caso se observa la alta correlación entre `edad` y `prima`, este grupo tiene características como:
+
+* El `bmi` no sobrepasa el valor de 30, después de 30 se considera sobrepeso.
+* Se tiene cierta homogeneidad en la cuantia por region.
+* El rango de edad es bastante grande.
+* Completa paridad en el género.
+
+Al parecer el aumento del precio del valor de la prima, depende de la edad, y la correlación es alta y positiva. También sabemos que se atribuye en correlación positiva al `bmi`.
+
+
+### Ejercicio 15.
+
+Construya un `density_plot` de los fumadores y de la variable `bmi`.
+
+```{r}
+df %>% filter(fumador == "si") %>%
+  ggplot() +
+  aes(x = bmi) +
+  geom_density()
+```
+
+```{r}
+df %>% filter(fumador == "si") %>%
+  summarise(media = mean(bmi), mediana = median(bmi))
+```
+
+Ambas medidas son cercanas y 30, si se piensa además en la forma de la FDP, vemos que es un monticulo que acumula gran información (área) cerca al valor 30.
+
+
+### Ejercicio 16.
+
+
+## Conclusiones
+
+Realice las conclusiones de su análisis.
+
+
+## Observaciones
+
+
+1. Las estadísticas de resumen se pueden usar para indicar rápidamente dónde está el "centro" de un conjunto de datos o qué tan disperso está el conjunto de datos.
+3. Podemos investigar correlaciones entre variables. Esto es especialmente útil durante el análisis exploratorio de datos y cuando se construyen modelos que predicen el valor de una variable de interés en función de varias otras.
+
+</div>

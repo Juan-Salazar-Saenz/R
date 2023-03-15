@@ -1,0 +1,477 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 8: Descriptivos tabla titanic.***
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+
+Hacia inicios del siglo 19 se buscaba realizar un viaje desde Europa hacia los EEUU, el cual lograra albergar gran cantidad de gente movilizada de continente a continente. Se presentó un desastre...
+Más información [aquí](https://es.wikipedia.org/wiki/RMS_Titanic)
+
+Se desea describir la mayor cantidad de informació en la tabla, para ello haremos uso de los conocimientos adquiridos en la parte conceptual del curso, junto al software de apoyo, en este caso, R.
+
+## Cargue de los datos
+
+Vamos a cargar las librerias utilizadas, asi como la información.
+
+
+```{r,echo=TRUE, message=FALSE, warning=FALSE}
+## Librerias usadas
+rm(list = ls())
+library(patchwork)
+library(cowplot)
+library(psych)
+library(tidyverse)
+library(DT)
+```
+
+## Descripción de la tabla de información.
+
+
+|     **Variable**       | **Descripción**         |
+|------------------------|-------------------------|
+|pclass                  | Clase del pasajero.(1 = 1st; 2 = 2nd; 3 = 3rd).|
+|survival                | Supervivencia (0 = No; 1 = Yes).|
+|name                    | Nombre.|
+|sex                     |Sexo.|
+|age                     | Edad.|
+|sibsp                   | Numero de hermanos/cónyuges a bordo (esposa/prome).|
+|parch                   | Número de padres/hijos a bordo (par / hijo).|
+|ticket                  | Número del Ticket.|
+|fare                    | Tarifa pagada.|
+|cabin                   | Cabina.|
+|embarked                | Puerto de embarque. (C = Cherbourg;Q=Queenstown; S=Southampton).|
+|boat                    | Bote salva vidas. |
+|body                    | Número de identificación del cuerpo.|
+|home.dest               | Destination.|
+
+`Sibling: hermano, hermana, hermanastro o hermanastra del pasajero a bordo del Titanic`
+
+`Spouse: Esposo o esposa del pasajero a bordo del Titanic (Amantes y prometidas ignoradas)`
+
+`Parent: Madre o padre del pasajero a bordo del Titanic`
+
+`Child: hijo, hija, hijastro o hijastra del pasajero a bordo del Titanic`
+
+Debemos leer la información
+
+```{r setup, include=TRUE}
+path<- 'https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/titanic3.csv'
+df <- read.csv2(path, sep = ",", stringsAsFactors = T, na.strings="", dec = ".")
+str(df)
+```
+## Información general.
+
+Veamos los valor nulos por columna:
+
+```{r echo=FALSE}
+print('Valores nulos por columna:')
+apply(is.na(df), 2, sum)
+```
+
+Valores únicos por columna:
+
+```{r}
+#df %>% distinct(sex)
+df %>% distinct(embarked)
+```
+
+Las varibles se destribuyen así:
+
+| **Tipo**               | **Columna**             |
+|------------------------|-------------------------|
+| **Continua**           | fare, age.                   |
+| **Discreta**           | sibsp, parch       |
+| **Nominal**            | survived, sex, embarked, body |
+| **Ordinal**            | pclass.                   |
+| **No estructurada**    | name, cabin, home.dest, boat,ticket|
+
+
+## Variables cuantitativas
+
+En primer lugar vamos a convertir las variables a su adecuada clase, para R, las 
+variables categóricas son de tipo `factor`
+```{r}
+cualitavitas = c("pclass","survived","sex","embarked")
+for (i in cualitavitas){
+  df[,i]<-as.factor(df[,i])
+}
+summary(df[cualitavitas])
+```
+Se observa que la mayoría de pasajeron eran de clase 3, 500 sobrevivientes, predomina el sexo masculino y la mayor cantidad de pasajeros embarcaron en Southampton. Para la variable `embarked` se tiene 2 valores faltantes.
+
+La información anterior se puede presentar en términos porcentuales
+
+```{r}
+for (porc in cualitavitas){
+  tem = round(prop.table(table(df[,porc]))*100,2)
+  print(tem)
+}
+```
+
+Vamos a construir una tabla de frecuencias.
+
+```{r}
+frecAbs = table(df$pclass); frecAbs
+frecRela = prop.table(frecAbs); frecRela
+frecRelap = frecRela*100; frecRelap
+TabFrec <-round(cbind(frecAbs,frecRela,frecRelap), 2) ; TabFrec
+Totales=apply(TabFrec,2,sum) ; Totales
+rbind(TabFrec, Totales)
+TabFrec2 = rbind(TabFrec, Totales=apply(TabFrec,2,sum));TabFrec2
+```
+
+Siempre una gráfica ayudará a la descripción de la información
+
+```{r, echo=FALSE}
+p1 <- ggplot(df) +
+  aes(x=embarked)+
+  geom_bar() + 
+  xlab("Lugar de embarque") + ylab("")
+##
+p2 <- ggplot(df, fill="red") +
+  aes(x=sex)+
+  geom_bar(color = 'green') + 
+  xlab("Género") + ylab("")
+##
+p3 <- ggplot(df, fill="red") +
+  aes(x=pclass)+
+  geom_bar(color = 'red') + 
+  xlab("Clase pasajero") + ylab("")
+##
+p4 <- ggplot(df, fill="red") +
+  aes(x=survived)+
+  geom_bar(color = 'blue') + 
+  xlab("Supervivencia") + ylab("")+
+  theme(axis.ticks = element_blank())
+p1 + p2 + p3 + p4
+```
+
+Vamos a construir una gráfica mucho más elaborada. Para ello vamos a hacer uso de
+de la tabla de frecuencias ya obtenida anteriormente.
+```{r}
+g1 <- barplot(frecAbs,   # nombre de la tabla 
+              xlab = "Clase del pasajero",  # etiqueta eje x
+              ylab = "Cantidad",        # etiqueta eje y
+              main = "Gráfico de barras: pclass vs Cantidad", # título
+              col = c("blue", "red", "orange"), # colores de las barritas
+              ylim = c(0,900) # límites en el eje y.
+              #xlim= c(0,8) límites en ele eje $x$.
+)
+box(bty = "L") # forma del marco de la gráfica
+
+text(g1,  # nombre de la gráfica
+     frecAbs+50,  # posición de las etiquetas
+     labels=frecAbs, # etiquetas
+     xpd=T)
+```
+
+#### Ejercicio: Realice las demás gráficas.
+
+## Variables cuantitativas.
+
+Veamos ahora que sucede con las variables cuantitativas
+
+```{r}
+cuantitavivas = c("fare","age","sibsp","parch")
+df1 = df[cuantitavivas]
+summary(df1)
+```
+* Se observa que por lo menos un pasajero no pagó su boleto, además el máximo precio
+pagado fué de $\$ 512.329$, note que el 75% pagó por concepto de boleto $\$ 31.275$ o menos.
+
+* Para la varible `age`, vemos que el 75% o menos eran persona de 39 años, es decir los
+pasajeron eran personas laboralmente activas.
+
+* Para las variables restantes se observa que los pasajeros no viajaban en familia en 
+su gran mayoría.
+ 
+Para calcular la media de cada columna tenemos varios caminos.
+
+
+```{r}
+# La instrucción sapply(datos, function(x) … ) (esta sirve para dataframes)
+round(sapply(df1, function(x) mean(x)),3) # Primer camino
+apply(df1,2,mean) # 1 para filas, 2 para columnas.
+```
+
+Observe que para el caso de `apply` se presentan problemas en caso de tener `NA`,
+podemos eliminarlos con `na.omit(variable)`
+
+```{r}
+round(apply(na.omit(df1),2,mean),2)
+```
+Vamos a calcular las medidas de dispersión, y algunas de posición.
+
+```{r}
+## var para obtener la varianza
+round(sapply(na.omit(df1), var),2)
+```
+```{r}
+## sd, desviación estardar.
+round(sapply(na.omit(df1), sd),2)
+```
+
+```{r}
+# quantile(df, probs = c()), donde c() es un vector de entradas entre 0 y 1
+sapply(na.omit(df1), function(x) quantile(x,prob=c(0.80,0.85,0.90,0.95)))
+```
+
+Como la información adicional podemos decir que:
+
+* Las pesonas de la tercera edad (60 años o mas), son menos del 5%.
+* Menos del 10% pagaron más de 100 unidades unitarias de su boleto.
+* Menos del 5% tenian más de 2 familiares en la embaración.
+
+## Información grafica de las varibles cuantitativas
+
+Las gráficas para este tipo de varibles describen tanto la distibución de la varible así como su concentración:
+
+```{r}
+par(mfcol=c(2,2)) ## Creamos un marco de 2x2 recorrido por columnas.
+hist(df$fare ,main = "Histograma de fare",xlab= "Precio boleto", col = "blue",ylab="Frecuencia")
+hist(df$age, main="Histograma de age", xlab= "Edad", col = "red", ylab="Frecuencia")
+hist(df$sibsp, main="Histograma de sibsp", xlab= "Sibsp", col ="pink", ylab="Frecuencia")
+hist(df$parch, main = "Histograma parch", xlab= "parch", ylab="Frecuencia")
+par(mfcol = c(1, 1))
+```
+De las gráficas anteriores podemos comentar que:
+
+* Gran concentración de información en el precio del boleto hasta de $\$ 100$
+* Gran concentración entre los 20 y 40 años.
+* La gran mayoría viajaba sin familiares.
+
+
+
+Realicemos ahora los box-plots
+```{r}
+par(mfcol=c(2,2))
+boxplot(df$fare, horizontal = T, main = "Boxplot fare",xlab= "Precio boleto", col = "blue",ylab="")
+boxplot(df$age, horizontal = T,main = "Boxplot age", xlab= "Edad", col = "red", ylab="")
+boxplot(df$sibsp, horizontal = T, main = "Boxplot sibsp", xlab= "Sibsp", col ="pink", ylab="")
+boxplot(df$parch, horizontal = T, main = "Boxplot parch", xlab= "parch", ylab="")
+par(mfcol = c(1, 1))
+```
+
+Finalmente la forma de la distribución
+
+```{r}
+h = hist(df$fare ,
+     main = "Histograma y densidad variable fare",
+     xlab = "Precio boleto",
+     col = "blue",
+     ylab ="Frecuencia relativa",
+     freq = F, # frecuencias relativas.
+     ylim = c(0,0.045))
+##
+lines(density(na.omit(df$fare)), 
+      col = "red",
+      lwd = 2 ) #grosor
+##
+legend("topright",# colocarle indicación a la línea de densidad.
+       col=c("red"),
+       legend =c("línea de densidad"),
+       lwd=3,
+       bty = "n")
+##
+axis(1, # 1 es para el eje x
+     at = h$breaks, # etiquetas del eje x
+     cex.axis=1) # permite cambiar la escala en los ejes.
+```
+```{r}
+plot(density(na.omit(df$age)), main = "Aproximación densidad age", xlab= "Edad", col = "red", ylab="Densidad")
+plot(density(na.omit(df$sibsp)), main = "Aproximación densidad sibsp", xlab= "Sibsp", col ="green", ylab="Densidad")
+plot(density(na.omit(df$parch)), main = "Aproximación densidad parch", xlab= "embarked", ylab="Densidad")
+```
+
+## Datos bivariados
+
+Se observó la información de cada una de la variables. De lo observado, se pueden 
+generar preguntas donde intervienen más de una variable.
+
+Tales como:
+
+* Como se distribuyen los géneros dependiendo de las clases en la embarcación.
+* Como se distribuyen los géneros dependiendo de la zona de embarque.
+* ¿Se tuvo preferencia para la salvación dependiendo de la clase?
+* ¿Se respetó la prioridad de las mujeres en el rescate?
+* Como se distrubuyen las edades dependiendo de la clase.
+ 
+
+## Varible cualitativa vs. varibles cualitativa.
+
+Vamos a analizar las tablas cruzadas.
+
+
+```{r}
+round(prop.table(table(df$pclass,df$survived),1)*100,2) ## parámetro 1 en prop.table
+```
+Observe que el 61.92% de los que estaban en la **clase 1** sobrevivieron, además el 74.47% en la **clase 3** murió. Parece que hay relación entre sobrevivir y la clase en que se viajaba.
+
+
+Veamos la informacion de forma gráfica.
+
+```{r}
+ggplot(df) +
+  aes(x = survived, fill = pclass, color = pclass) +
+  geom_bar(position = "dodge") + 
+  xlab("Supervivencia") + 
+  ylab("Conteo") + 
+  ggtitle("Sobrevivencia por clases")
+       
+```
+
+Antes de realizar el análisis del plot, veamos la lógica de la construcción.
+
+```{r,eval=FALSE}
+ggplot(df) # Creamos un entorno gráfico para trabajar con el data frame df.
+```
+```{r}
+ggplot(df) + # Creamos un marco gráfico y seleccionamos el data frame de trabajo.
+  aes(x = survived, color = pclass) + # Seleccionamos información a graficar. seleccionamos grupos con el parámetro color.
+  geom_bar()+ ## Selecionamos gráfico y características adicionales
+  xlab("Supervivencia") + # Etiqueta eje x.
+  ylab("Conteo") + # Etiqueta eje y
+  ggtitle("Sobrevivencia por clases") + ## titulo principal.
+  theme(axis.ticks.x = element_blank()) ## eliminamos valores guía del eje x.
+
+       
+```
+
+
+Observe que las gráficas refuerzan la idea anterior, la tasa de mortalidad es mucho más alta en la **clase 3** que en las demás, se observa una mayor frecuencia en los sobrevivientes de la **clase 1**. Recuerde además que la mayor cantidad de personajes en la embarcación eran de la **clase 3**.
+
+Realicemos otros cruces de varibles.
+
+```{r}
+round(prop.table(table(df$embarked,df$sex),2)*100,2) ## paramétro 2 en prop.table
+```
+
+En este caso los porcentajes se obtienen por columna, es decir, el 24.35% de las mujeres embarcaron en la ciudad C, el 12.93% lo hizo en la ciudad Q y el 62.72% en la ciudad S.
+
+De manera gráfica podemos realizar lo siguiente:
+
+```{r}
+df %>% ggplot() +
+       aes(x = embarked, fill = sex, color = sex) +
+       geom_bar(position = "dodge")
+
+```
+
+En la gráfica anterior vemos que aunque predomina el género masculino en todos los puertos, donde se destaca la casi paridad es el puerto Q.
+
+
+Una variable de interés es sin duda `survived`. Vamos a contrastarla con las demás categóricas.
+
+```{r}
+df %>% ggplot() +
+       aes(x = survived, fill = sex, color = sex) +
+       geom_bar(position = "dodge")
+       
+```
+
+Al parecer se dió prioridad en la salvación a las mujeres, recuerde que en la embarcación predominada el género masculino (64.4%).
+
+Finalmente contrastemos `survived` con `embarked`.
+
+
+```{r}
+df %>% ggplot() +
+       aes(x = survived, fill = embarked, color = embarked) + 
+       geom_bar(position = "dodge")
+
+```
+
+Note que sobrevivieron más en el puerto C en comparación con quienes mueren. Note que en este puerto no predominaron las mujeres, para buscar atribuir esa situación dado el género. ¿Qué podría tener influencia para esta situaciación?
+
+La siguiente información visual:
+
+```{r}
+ggplot(df, (aes(embarked, fill = pclass))) +
+       geom_bar( position="fill", color = 'black') 
+       
+```
+
+Da cuenta que en el puerto C, predominó la **clase 1**, es decir la clase que sabemos tuvo la mayor cantidad de sobrevivientes. 
+
+La relación de las varibles cualitativas en los siguientes gráficos:
+
+## Varibles cuantitativas y varibles cualitativas.
+
+
+Vamos a observar la distribución de la edad de aquellos que fueron sobrevivientes y aquellos que no.
+
+```{r warning=FALSE}
+df %>%  ggplot() +
+        aes(x=age, color = survived) +
+        geom_density()
+  
+```
+
+Las distribuciones de la edad son similares entre ambas categorías, pero se observa que una mayor cantidad de niños fueron salvados en contraste con los que no.
+
+Aunque debería ser obvio, veamos la distribución de los precios según las clases.
+
+```{r warning=FALSE}
+ggplot(df) +
+  aes(x=fare, fill = pclass, color = pclass) +
+  geom_boxplot() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+```
+
+por supuesto se observa la diferencia entre los tres grupos.
+
+
+¿Había alguna predominancia de grupo o grupos etarios dependiendo de las clases?
+
+
+```{r warning=FALSE}
+ggplot(df) +
+  aes(x= age, color = pclass)+
+  geom_density()
+```
+
+Observe en la **clase 3** tiene una mayor densidad que las demás en edades altas, esta clase es menos puntiaguda que las demás y tiene forma de campana, los otros 2 segmentos están sesgados a la derecha. 
+
+Al parecer, vemos que la clase era un factor importante para aumentar la chance de estar vivo, se esperaría que al comparar los precios de los boletos según si sobrevivió o no, se marcara una diferencia.
+
+
+```{r warning=FALSE}
+ggplot(df) +
+  aes(x = fare, fill=survived,color = survived) +
+  geom_boxplot(position="dodge") +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+
+
+```
+
+Claramente se observa la diferencia en el valor del boleto entre quienes sobrevivieron y quienes no.
+
+## Ambas variables cuantitativas.
+
+Observemos la matriz de correlación de las variables cuantivativas.
+
+```{r}
+round(cor(df[cuantitavivas], use="complete.obs"),2)
+
+```
+```{r}
+ggplot(df) +
+  aes(x=sibsp,y=parch) +
+  geom_jitter(alpha = 1)
+```
+```{r}
+ggplot(df) +
+  aes(x=sibsp,y=parch, color = pclass) +
+  geom_jitter(alpha = 1)
+```
+
+```{r}
+pairs.panels(df[cuantitavivas], pch=1, lwd=0.01)
+```
+
+En ningún caso destaca ninguna relación lineal llamativa en las varibles.
+
+</div>
