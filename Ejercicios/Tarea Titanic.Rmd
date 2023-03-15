@@ -1,0 +1,95 @@
+---
+title: "Tareas"
+author: ']Juan Salazar'
+date: "3/3/2023"
+output: html_document
+---
+
+```{r}
+
+## borramos el espacion de trabajo
+rm(list =ls() )
+
+##importamos la librerias
+library(tidyverse)
+library(plotly)
+library(DT)
+```
+
+```{r}
+##traemos el CSV de fumadores desde git
+path<- 'https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/titanic3.csv'
+df <- read.csv2(path, sep = ",", stringsAsFactors = T, na.strings="", dec = ".")
+str(head(df,10))
+class(df)
+```
+
+##pclass        Clase del pasajero.(1 = 1°; 2 = 2°; 3 = 3°).
+##survived      Supervivencia (0 = No; 1 = Sí).
+##name          Nombre.
+##sex           Sexo.
+##age           Edad.
+##sibsp         Numero de hermanos/cónyuges a bordo (esposa/prome).
+##parch         Número de padres/hijos a bordo (par / hijo).
+##ticket        Número del billete.
+##fare          Tarifa pagada.
+##cabin         Cabina.
+##embarked      Puerto de embarque. (C = Cherburgo; Q = Queenstown; S = Southampton).
+##boat          Bote salva vidas.
+##body          Número de identificación del cuerpo.
+##home.dest     Destino.
+
+##Modificamos los valores a logicos
+
+```{r}
+
+df$survived = as.logical(df$survived)
+
+new_df <- df %>% filter(survived=='TRUE') %>% filter(embarked !='NA')  %>% group_by(survived , pclass ) 
+str(new_df)
+
+titanic <- ggplot(new_df) + aes(x=pclass, color = embarked) + geom_density() +
+  labs(y="Puerto de embarque",x="Clase del pasajero",title="Supervivencia") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(titanic)
+
+```
+```{r}
+new_df2 <- new_df %>% summarize(embarked =  n())
+head(new_df2,10)
+
+titanic2 <- ggplot(new_df2) + 
+  aes(x=pclass , y=embarked) +
+  geom_bar(stat = "identity", fill = c("white", "green", "blue") ) +
+ labs(y="Puerto de embarque",x="Clase del pasajero",title="Supervivencia") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(titanic2)
+
+```
+```{r}
+new_df3 <- df %>% filter(survived=='TRUE') %>% filter(embarked !='NA')  %>% group_by(embarked,pclass) 
+
+titanic3 <- ggplot(new_df3) +
+  aes(x=pclass, fill=embarked) +
+  geom_bar( color = 'black') +
+  labs(y="embarque",x="clase",title="Supervivencia / clase") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(titanic3)
+
+```
+```{r}
+new_df3 <- df %>% filter(survived=='TRUE') %>% filter(embarked !='NA')  %>% group_by(embarked , pclass , sex) 
+
+titanic4 <- ggplot(new_df3) +
+  aes(x=embarked,Y=pclass,fill=sex) +
+  geom_bar( color = 'black') +
+  labs(y="Cantidad",x="Embarque",title="Supervivencia / Genero") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(titanic4)
+```
+Puerto de embarque. (C = Cherburgo; Q = Queenstown; S = Southampton).
+
