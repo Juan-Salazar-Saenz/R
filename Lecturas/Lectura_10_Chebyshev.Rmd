@@ -1,0 +1,251 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 10: Teorema de Chebyshev***
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+El teorema de Chebyshev es una desigualdad de tipo probabilístico que se usa para medir la dispersión de datos para cualquier distribución.
+
+
+<font color = "blue" FONT SIZE =5> **Teorema de Chebyshev:** </font>
+
+La proporción de cualquier distribución (muestra o población) que está a menos de $k$ desviaciones estándar de la media es por lo menos
+$$1-\dfrac{1}{k^2}$$
+donde, $k$ es cualquier número positivo mayor que $1$. *Este teorema aplica para cualquier distribución de datos* y para una muestra o población. Solo se debe tener cuidado con la notación: 
+
+- **Población:** $(\mu, \sigma)$
+
+- **Muestra:** $(\overline{x}, S)$
+
+Básicamente lo que dice el Teorema es lo siguiente:
+$$P(|x-\mu| \leq k \sigma) \geq 1- \dfrac{1}{k^2}$$
+Esta desigualdad es equivalente a
+
+$$P(|x-\mu| \geq k\sigma ) \leq \dfrac{1}{k^2}$$
+
+Gráficamente se tiene que:
+
+```{r, echo=F}
+hist(iris$Sepal.Length,
+     freq=F, 
+     ylim = c(0,0.5),
+     col = "aliceblue",
+     xlab = "variable",
+     ylab = "frecuencia",
+     main = "Teorema de Chebyshev",
+     xaxt="n")
+lines(density(iris$Sepal.Length), # curva de densidad
+      col="red", #color
+      lwd=2) #grosor
+ 
+abline(v=c(mean(iris$Sepal.Length),mean(iris$Sepal.Length)+0.6, mean(iris$Sepal.Length)-0.6
+           ),
+       col=c("blue","green","purple"),lwd=2) 
+text(5.85,0.3, labels = "Por lo menos 1-1/k^2")
+legend(7,0.4,  #posición de la etiqueta
+       legend=c("media(x)-k.sd(x)", "media(x)", "media(x)+k.sd(x)"), 
+       bty = "n", # forma
+       fill=c("purple","blue","green"),  #colores
+       ncol=1, #columnas
+       cex=0.8)
+``` 
+
+Este teorema nos da una estimación de la cantidad de datos que estan a $k$ desviaciones estándar de la media.
+
+Veamos algunos ejemplos
+
+> <font color = "magenta" FONT SIZE =5> **Ejemplo 1** </font>
+
+Considere la base de datos iris y la variable *Sepal.Length*. Calcular la media, la desviación estándar y verificar el teorema de Chebyshev a dos desviaciones estándar de la media
+
+Primero calculamos la media y la desviación estándar. Usaremos dos cifras decimales.
+
+```{r}
+iris$Sepal.Length
+```
+
+```{r}
+me1 = round(mean(iris$Sepal.Length),2) ; me1
+ds1 = round(sd(iris$Sepal.Length),2) ; ds1
+liminf1 = me1-2*ds1 ; liminf1
+limsup1 = me1+2*ds1 ; limsup1
+```
+
+Esto indica que en el intervalo $[4.18, 7.5]$ están por lo menos el $1-\dfrac{1}{k^2}= 1-\dfrac{1}{4}=0.75$ de los datos, es decir, el 75% de los datos. Por otra parte, veamos cuántos datos realmente estan en ese intervalo
+
+```{r}
+a1 = length(iris$Sepal.Length[iris$Sepal.Length>= 4.18 & iris$Sepal.Length<= 7.5 ]) ; a1
+b1 = length(iris$Sepal.Length) ; b1
+prop1 =  a1/b1*100 ; prop1
+```
+
+Es decir, el $96\%$ de los datos de la variable *Sepal.Length* están en el intervalo indicado. Para verificar gráficamente, construyamos el histograma.
+
+```{r}
+hist(iris$Sepal.Length, col = "aliceblue",
+     main = "Histograma Sepal.Length: Tabla Iris",
+     xlab = "Sepal.Length")
+```
+
+> <font color = "magenta" FONT SIZE =5> **Ejemplo 2** </font>
+
+Considere la base de datos datajason y la variable *nivel_exposicion_campos*. Calcular la media, la desviación estándar y verificar el teorema de Chebyshev a 1.5 veces desviaciones estándar de la media
+
+```{r}
+library(jsonlite)
+library(tidyverse)
+library(jsonlite)
+library(DT)
+path = "https://raw.githubusercontent.com/lacamposm/Fundamentos_Analitica/main/data/espectro.json"
+datajson = fromJSON(path)
+datajson$nivel_exposicion_campos = as.numeric(datajson$nivel_exposicion_campos)
+```
+
+Calculamos la media y desviación estándar
+
+```{r}
+me2 = round(mean(datajson$nivel_exposicion_campos),2) ; me2
+ds2 = round(sd(datajson$nivel_exposicion_campos),2) ; ds2
+liminf2 = me2-1.5*ds2 ; liminf2
+limsup2 = me2+1.5*ds2 ; limsup2
+```
+
+Esto indica que en el intervalo $[-0.77, 3.79]$ está por lo menos el $1-\dfrac{1}{k^2}= 1-\dfrac{1}{(1.5)^2}=0.56$ de los datos, es decir, el 56% de los datos. Por otra parte, veamos cuántos datos realmente están en ese intervalo.
+
+```{r}
+a2 = length(datajson$nivel_exposicion_campos[datajson$nivel_exposicion_campos>= -0.77 & datajson$nivel_exposicion_campos<= 3.79 ]) ; a2
+b2 = length(datajson$nivel_exposicion_campos) ; b2
+prop2 =  a2/b2*100 ; prop2
+```
+
+Veamos el histograma de la variable.
+
+
+```{r, eval=F , include=F}
+library(readr)
+path = "C:/Users/Andres Campos/Desktop/Fundamentos_R/data/APARTAMENTOS.csv"
+APARTAMENTOS = read_csv(path, col_types = cols(X1 = col_skip()))
+```
+
+
+
+```{r, eval=F , include=F}
+hist(APARTAMENTOS$mt2, probability = T, ylab = "", main = "Con valores atipicos", col = "SlateBlue", axes = F) 
+axis(1)
+par(new=T)
+boxplot(APARTAMENTOS$mt2, horizontal = T, axes=F, lwd=2, col="Chartreuse")
+abline(v=c(median(APARTAMENTOS$mt2)), lwd=2)
+```
+
+
+
+
+> <font color = magenta FONT SIZE = 5> Ejemplo: </font> 
+
+En una máquina que empaca café, todos los paquetes de café tienen un peso medio de $8$ onzas con una desviación estándar de $0.02$ onzas. ¿Qué porcentaje de los paquetes, como mínimo, contienen entre $7.80$ y  $8.20$ onzas de café.
+
+**Solución:** Primero examinamos los datos que nos suministran
+
+- La media es: $\overline{x}=8$
+
+- La desviación estándar : $\sigma = 0.02$
+
+- Intervalos donde debemos examinar la cantidad de datos : $[7.80, 8.20]$
+
+Ahora bien, observe que la media está en la mitad del intervalo y este equidista de $0.2$ de los límites del intervalo. Es decir, $k \sigma = 0.2$.
+
+Con lo cual, $0.02k=0.2$, y entonces $k=10$. Es decir, debemos aplicar el teorema de Chebyshev para obtener una cota inferior de la cantidad de datos. Este teorema afirma que la proporción de datos que están ubicados a $k$ desviaciones estándar de la media es $1-\dfrac{1}{k^2}$. De esta manera
+
+$$1-\dfrac{1}{k^2}=1-\dfrac{1}{10^2}=1-\dfrac{1}{100}= 0.99$$
+Podemos concluir que el $99\%$ de las bolsas de café están en los límites establecidos.
+
+
+> <font color = "magenta" FONT SIZE = 5> Ejercicio para la casa: </font>
+
+Suponga que se han muestreado los pesos de los perros en un determinado refugio de animales. Al analizar el muestreo, se ha descubierto que la muestra tiene una media de 20 libras con una desviación estándar de 3 libras. ¿Qué porcentaje como mínimo tiene entre 14 y 26 libras?
+
+
+<font color = "blue" FONT SIZE =6> _La Regla Empírica o Normal_ </font>
+
+Esta regla como su nombre lo indica se basa en la distribución normal, que en su forma general es
+
+$$D.N. =\dfrac{1}{\sqrt{2\pi\sigma}}e^{-\dfrac{(x-\mu)^2}{2 \sigma^2}}$$
+donde, $\mu$ y  $\sigma$ son la media y desviación estándar respectivamente, y cuya gráfica es de la siguiente forma:
+
+```{r, echo=F}
+hist(rnorm(1:10000, mean = 0, sd=1), freq=F, ylim = c(0,0.5), xlim = c(-4,4), col = "gold", main="Distribución Simétrica o Normal", xlab = "Variable")
+curve(dnorm(x, mean=0, sd=1), col="red", lwd=2, add=TRUE, yaxt="n") 
+``` 
+
+**Regla empírica:** En una distribución de datos simétrica $(\approx Normal)$, aproximadamente el $68\%$ de los datos se encuentran a menos de una desviación estándar de la media. cerca del $95\%$ de los datos se encuentran a menos de 2 desviaciones estándar de la media. Finalmente, el $99.7\%$ de los datos están a menos de tres desviaciones estándar de la media.
+
+```{r, echo=F}
+hist(rnorm(1:10000, mean = 0, sd=1), freq=F, ylim = c(0,0.7), xlim = c(-4,4), col = "aliceblue", xaxt="n", main= "Regla Empírica o Normal", xlab = "variable")
+curve(dnorm(x, mean=0, sd=1), col="red", lwd=2, add=TRUE, yaxt="n")
+arrows(-1,0.4,1,0.4, angle = 90 , code = 3, col = "darkred", lwd = 2)
+arrows(-2,0.5,2,0.5, angle = 90 , code = 3, col = "darkred", lwd = 2)
+arrows(-3,0.6,3,0.6, angle = 90 , code = 3, col = "darkred", lwd= 2)
+
+segments(-3,0,-3,0.52, lty=2, col = "blue", lwd = 1)
+segments(3,0,3,0.52, lty=2, col = "blue", lwd = 1)
+
+segments(-2,0.1,-2,0.42, lty=2, col = "blue", lwd = 1)
+segments(2,0.1,2,0.42, lty=2, col = "blue", lwd = 1)
+
+segments(-1,0.3,-1,0.33, lty=2, col = "blue", lwd = 1)
+segments(1,0.3,1,0.33, lty=2, col = "blue", lwd = 1)
+
+segments(0,0,0,0.4, col = "purple", lwd = 2)
+
+text(-1.5 ,0.65, labels="3(sd)", xpd=T, cex = 0.8)
+text(-1 ,0.55, labels="2(sd)", xpd=T, cex = 0.8)
+text(-0.5 ,0.45, labels="1(sd)", xpd=T, cex = 0.8)
+text(1.5 ,0.65, labels="99.7%", xpd=T, cex = 0.8)
+text(1 ,0.55, labels="95%", xpd=T, cex = 0.8)
+text(0.5 ,0.45, labels="68%", xpd=T, cex = 0.8)
+```
+
+> <font color = "magenta" FONT SIZE = 5> Ejemplo: </font>
+
+En una compañía de bienes y raíces, los precios de la renta siguen una distribución de frecuencias simétrica (normal). La media aritmética de una muestra es de $\$600$ dólares y la desviación estándar $\$30$ dólares. ¿En qué intervalo alrededor de la media se encuentra el $95\%$ de los datos? Compare con el teorema de Chebyshev.
+
+**Solución:** De acuerdo a la regla empírica el $95\%$ corresponde a dos desviaciones estándar de la media, es decir, el intervalo está dado por
+
+$$[\overline{x}-2\sigma, \overline{x}+2\sigma]=[600-2(30), 600+2(30)]=[540,660]$$
+
+Por lo tanto, el $95\%$ de los precios de las rentas oscilan entre $540$ y $660$ dólares.
+
+Ahora bien, si usaramos el teorema de Chebyshev, la información suministrada por el problema es:  la media y la desviación estándar y debemos hallar $k$ de tal manera que 
+
+$$1-\dfrac{1}{k^2}=0.95$$
+Es decir $\dfrac{1}{k^2}=0.05$ con lo cual $k^2=\dfrac{1}{0.05}$ y de esta manera $k \approx 4.5$. Así, la proporción de datos que están a $4.5 \times \sigma=4.5 \times 30 = 135$ dólares de la media es mayor o igual al $95\%$ del total de los datos.
+
+
+> <font color="magenta" FONT SIZE = 5> Ejercicio para la casa: </font>
+
+El siguiente vector muestra la información de los retrasos en el horario de llegada a su oficina para la reunión del pasado domingo.
+
+```{r}
+ejer <- c(4,7,6,4,8,8,10,5,6,7,6,7,5,6,8,7.1,2,9,8.3,6, 6, 7, 8, 
+          6, 7, 12, 6, 6, 10, 10, 6, 6.3, 5, 5, 4, 6, 5, 12, 9, 
+          9, 10, 6, 9.1, 10, 12.4, 9, 4, 2, 5, 10, 7, 7.1, 3, 10, 7,
+          7, 9, 6, 4, 13, 7, 7, 7, 11, 8.5, 8.4, 11, 4, 4, 5, 8, 6, 
+          6, 8.4, 4, 7, 11, 1.9, 6, 5, 8.5, 3, 5, 7.8, 8, 8, 8, 12, 9, 8,7, 6, 10, 8, 2, 6, 8, 10, 11, 8, 12, 4, 8, 5, 7, 7, 9, 11, 7, 9, 7, 8, 10, 5, 8, 7, 10, 7, 2.5, 6.7, 9.3, 2.3,8.2,8.5,8.6)
+```
+
+
+Con base en la información y usando el software `R`.
+
+
++ Responda de forma exacta: ¿Qué porcentaje de datos se encuentra a una distancia de $\sigma$ respecto a la media? ¿cuántos a $2\sigma$? y ¿cuántos a $3\sigma$?
+
++ Compare los resultados del punto anterior con los obtenidos mediante el teorema de Chebyshev y la regla empírica
+
++ ¿Los resultados sugieren una distribución aproximadamente normal?
+
++ ¿En qué proporción los trabajadores llegan con $9.5$ minutos de retraso?
+
+
+

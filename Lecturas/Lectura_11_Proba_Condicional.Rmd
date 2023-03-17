@@ -1,0 +1,283 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 11: Probabilidad Condicional***
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+
+Para la introducción a esta sección veamos el siguiente vídeo.  
+
+https://www.youtube.com/watch?v=D7KKlC0LOyw
+
+Consideremos la siguiente situación: Tenemos una urna que contiene 10 bolas rojas y 15 bolas blancas. De las 10 bolas rojas , 4 tienen un huequito y 6 no tienen huequito. De las 15 blancas, 9 tienen un huequito y 6 no tienen huequito. El experimento será: extraer una bola de la urna 
+
+a. ¿Cuál es la probabilidad que la bola tenga un huequito?
+
+b. Si sabemos de antemano que la bola seleccionada es roja. ¿Cuál es la probabilidad que la bola tenga un huequito? 
+
+**Solución:** En este caso, consideremos los siguientes eventos 
+
+- A : La bola extraída tiene huequito
+
+- B : La bola extraída es roja
+
+Supongamos que no tenemos ninguna información previa. Por lo tanto:
+
+- $P(A)=\dfrac{13}{25}$, adicionalmente
+
+- $P(B)=\dfrac{10}{25}=\dfrac{2}{5}$
+
+Ahora, para responder b) supongamos que sabemos de antemano que la bola es roja. En este caso, el espacio muestral se reduce y por lo tanto.
+
+- $P(A)=\dfrac{4}{10}=\dfrac{2}{5}$
+
+<font color = "blue" FONT SIZE =5> ***Definición [La probabilidad condicional]*** </font>
+ Sean $A$ y $B$ dos eventos tales que $P(B)>0$, la probabilidad del evento $A$ dado $B$ o condicionado a la ocurrencia del evento $B$ es
+
+$$P(A \, | \, B)= \dfrac{P(A \cap B)}{P(B)}$$
+Veamos como aplica el ejemplo anterior
+
+$P(A \, | \, B)= \dfrac{P(A \cap B)}{P(B)}=\dfrac{\dfrac{4}{25}}{\dfrac{10}{25}}=\dfrac{4}{10}=\dfrac{2}{5}=0.4$
+
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo*** </font>
+
+Un  taller  sabe  que  por  término  medio  acuden  por  la  mañana  tres  automóviles con problemas eléctricos, ocho con problemas mecánicos y tres con problemas de cerradura, y  por  la  tarde  dos  con  problemas  eléctricos,  tres  con  problemas  mecánicos  y  uno  con problemas de cerradura.
+
+   + Representar la información en una tabla
+   
+   + ¿Cuál es el porcentaje que acuden por la tarde?
+   
+   + ¿Cuál es la probabilidad de que un automóvil con problemas eléctricos acuda por la mañana?
+   
+Veamos la solución
+
+```{r, echo=T, eval=T, include=T, message = FALSE, warning=FALSE}
+library(dplyr)
+
+```
+
+```{r}
+df = data.frame( "electricos" = c(3,2),
+                 "mecanicos" = c(8,3),
+                 "cerradura"= c(3,1),
+                 row.names = c("mañana", "tarde")); df
+```
+
+
+```{r}
+df1 = df %>%
+  rowwise() %>%
+  mutate(total = sum(electricos,mecanicos,cerradura)/20)
+df2 = df %>% summarise(across(everything(),sum))/20
+```
+
+```{r}
+bind_rows(df1,df2)
+```
+
+<font color = "blue" FONT SIZE =5> _***Algunas propiedades de la probabilidad condicional***_ </font>
+   
+   
+Sea $E$ un evento fijo del espacio muestral $\Omega$, es decir, $E \subseteq \Omega$, podemos definir la siguiente función:
+
+$$P(\star \,  \mid \, E) \, : \, \mathscr{P}(\Omega)  \longrightarrow [0,1]$$
+
+que toma un evento del conjunto $\mathscr{P}(\Omega)$ y le asigna un elemento en el conjunto $[0,1]$
+
+
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejercicio para casa:*** </font>
+
+Verificar que $P(A^c \mid B) = 1 - P(A \mid B)$
+
+
+<font color = "blue" FONT SIZE =5> ***Regla del producto:*** </font>
+
+ Si tenemos dos eventos $A$ y $B$, con $P(B)>0$ entonces
+
+$$P(A \cap B) = P( A \, \mid \, B)  P(B)$$
+
+<font color = "blue" FONT SIZE =5> ***Propiedad:*** </font>
+
+Si $A_{1},A_{2}, \dots, A_{n}$ son eventos con $P(A_{1}\cap A_{2}\dots\cap A_{n-1})>0$ entonces:
+
+$$P(A_{1}\cap A_{2}\dots\cap A_{n}) = P(A_{1})P(A_{2}|A_{1})P(A_{3}|A_{1}\cap A_{2})\dots P(A_{n}|A_{1}\cap A_{2}\cap \dots\cap A_{n-1})$$
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo*** </font>
+
+Consideremos la situación: Tenemos una urna que contiene 10 bolas rojas y 15 bolas blancas. De las 10 bolas rojas , 4 tienen un huequito y 6 no tienen huequito. De las 15 blancas, 9 tienen un huequito y 6 no tienen huequito. Se extraen dos bolas sin reposición ¿Cuál es la probabilidad de extraer una bola roja y luego una blanca?
+
+*Solución* Definimos los eventos
+
+- A: La primera bola es roja
+
+- B: La segunda bola es blanca
+
+El ejercicio nos pide la probabilidad de $A \cap B$. Usando la regla del producto tenemos
+
+$$P(A \cap B) = P( B \, \mid \, A)  P(A) = \dfrac{15}{24} \dfrac{10}{25}=\dfrac{1}{4}$$
+
+<font color = "blue" FONT SIZE =5> **Definición:** </font>
+ Una colección de eventos $A_1, A_2, A_3 , \dots, A_k$ se dice una *partición* del espacio muestral $\Omega$ si
+
+- $A_{i} \cap A_{j} = \phi$ para todo $i \neq j$.
+
+- $\bigcup \limits_{i=1}^{k} A_i =\Omega$
+
+<font color = "blue" FONT SIZE =5> ***Teorema de Probabilidad Total:*** </font>
+ Sea $A_1, A_2, A_3 , \dots, A_k$ una partición del espacio muestral $\Omega$ y $B$ un evento o suceso cualquiera, entonces
+
+$$P(B)= \sum \limits_{i=1}^{k} P(B \, \mid \, A_{i}) P(A_{i})$$
+
+> <font color = "Magenta" FONT SIZE =4> ***Comentario*** </font>
+
+$$B=B \cup \Omega = B \cap \bigcup \limits_{i=1}^k A_i = \bigcup \limits_{i=1}^{k} (A_i \cap B)$$
+
+Si $A_i \cap A_j = \phi$ entonces $(A_i \cap B) \cap (A_j \cap B) = \phi$
+
+Por lo tanto,
+
+$$P(B)= P \left (\bigcup \limits_{i=1}^{k} (A_i \cap B) \right)= \sum \limits_{i=1}^k P(B  \cap A_i) = \sum \limits_{i=1}^k P(B \, \mid A_i) P(A_i)$$
+
+
+<font color = "Magenta" FONT SIZE =5> ***Ejemplos de aplicación de teorema de probabilidad total.*** </font>
+
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo 1*** </font>
+
+Supongamos que tenemos tres cajas con bombillas. La primera contiene 10 bombillas, de las cuales hay cuatro fundidas; en la segunda hay seis bombillas, estando una de ellas fundida, y la tercera caja hay tres bombillas fundidas de un total de ocho. ¿Cuál es la probabilidad de que al tomar una bombilla al azar de una cualquiera de las cajas, esté fundida? 
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo 2*** </font>
+
+En un acuario se tienen solo 2 especies de peces, el 40% son de la especie azul y el 60% son de la especie roja. De la especie azul, el 30% son machos; mientras que, de la especie roja, el 40% son hembras. ¿Cuál es la probabilidad de que un pez elegido aleatoriamente en el acuario sea macho?
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo en clase repaso*** </font>
+
+El $42\%$ de la población activa de cierto país está formada por mujeres. Se sabe que un $24\%$ de las mujeres y un $16\%$ de los hombres están en un paro. ¿Cuál es la probabilidad de que una persona elegida al azar de la población activa en este país esté en el paro?
+
+
+<font color = "blue" FONT SIZE =5> ***Teorema de Bayes*** </font>
+
+
+El Teorema de Bayes es una proposición enunciada por Thomas Bayes en el siglos XVIII, pero se conoció hasta después de su muerte por Richard Price y es una teorema basado en las probabilidades condicionales.
+
+Recordemos que en general $P(A \mid B)$ no coincide con $P(B \mid A)$
+La regla de Bayes o también denominada *regla inversa*, establece una relación entre estas dos probabilidades:
+
+$$P(B \mid A) = \dfrac{P(B)P(A \mid B)}{P(A)}$$
+
+- $P(B)$ es conocida como la probabilidad a **priori**
+
+- $P(B \mid A)$ es la probabilidad a posteriori.
+
+Si lo vemos como una relación causa-efecto, la idea es determinar la probabilidad de la causa, cuando se ha inducido un determinado efecto.
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo*** </font>
+
+En un salón de clase, la probabilidad de que a un estudiante seleccionado al azar le guste el helado es del $60 \%$, mientras que la probabilidad de que a un estudiante le guste la torta es del $36 \%$. Además, se sabe que la probabilidad de que a un alumno le guste la torta dado que le gusta el helado es del $40\%$. Calcular la probabilidad de que a un estudiante le guste el helado, dado que le gusta la torta.
+
+**Solución:** $66,67 \%$
+
+
+
+<font color = "blue" FONT SIZE =5> ***Teorema de Bayes (forma extendida):*** </font>
+ Sea $A_1, A_2, A_3 , \dots, A_k$ una partición del espacio muestral $\Omega$ y $B$ un evento o suceso cualquiera tal que $P(B)>0$, entonces
+
+$$P(A_j \mid B) = \dfrac{P(A_j)P(B \mid A_j)}{P(B)}=\dfrac{P(A_j)P(B \mid A_j)}{\sum \limits_{i=1}^{k} P(B \mid A_i)P(A_i)}$$
+*Demostración:* Aplicamos la definición de la probabilidad condicional y luego usamos el teorema de probabilidad total.
+
+$$P(A_j \mid B) = \dfrac{P(A_j \cap B)}{P(B)}=\dfrac{P(B \mid A_j)P(A_j)}{\sum \limits_{i=1}^{k} P(B \mid A_i)P(A_i)}$$
+Este Teorema describe cómo es posible "revisar" la probabilidad inicial de un evento o probabilidad a priori para reflejar la información adicional que provee la ocurrencia de un evento relacionado.
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo*** </font> 
+
+Una empresa que fabrica zapatos posee tres máquinas $M_1$ , $M_2$ y $M_3$, las cuales producen el $45\%$ , $30\%$ y $25\%$ respectivamente, del total de zapatos producidos en la fábrica. Los porcentajes de producción defectuosa en estas máquinas son del $3\%$, $4\%$ y $5\%$ respectivamente. Calcular las siguientes probabilidades
+
+  + Se selecciona un par de zapatos al azar. ¿Cuál es la probabilidad de que salga defectuoso?
+
+  + Se selecciona un par de zapatos al azar y resulta ser defectuoso. ¿Cuál es la probabilidad de que se haya producido por la máquina $M_2$?
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejercicio para casa:*** </font> 
+
+El $60\%$ de los tornillos producidos por una fábrica proceden de la máquina A y el $40\%$  de  la máquina  B.  La  proporción  de  defectuosos  en  A  es  $0.1$  y  en B  es  $0.5$.  ¿Cuál  es  la probabilidad de que un tornillo de dicha fábrica sea defectuoso? ¿Cuáles la probabilidad de que, sabiendo que un tornillo es defectuoso, proceda de la máquina A?
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejercicio para casa:*** </font>
+
+Use el Teorema de Bayes para resolver el ejercicio del vídeo visto en la clase anterior.
+
+
+> <font color = "blue" FONT SIZE =5> ***Definición[Independencia de eventos]*** </font>
+
+Dos eventos o sucesos se dicen *independientes* si la ocurrencia de uno de ellos no modifica la probabilidad del otro. Es decir, $P(A \mid B) = P(A)$ y $P(B \mid A) =P(B)$. En otras palabras son eventos son independientes si
+
+$$P(A \cap B)=P(A)P(B)$$
+
+> <font color = "Magenta" FONT SIZE =4> ***Ejemplo*** </font> 
+
+De una urna que contiene 4 bolas negras y 6 blancas se extraen dos bolas sin reposición , ¿cuál es la probabilidad de que la segunda bola sea blanca, sabiendo
+que la primera es negra? ¿Los eventos descritos son independientes? Realice el mismo ejercicio con reposición.
+
+> <font color = "blue" FONT SIZE =5> ***Propiedades de la independencia de eventos*** </font>
+
+
+- Dados dos eventos $A$ y $B$ mutuamente excluyentes, es decir, $A \cap B= \phi$ y si $P(A)>0$ y $P(B)>0$, entonces $A$ y $B$ no son independientes.
+
+- Si $P(B)=0$, entonces $B$ es independiente de cualquier evento $A$ talque $P(A)>0$.
+
+- Si $A \subseteq B$ y $P(A)>0$ y $P(B)<1$, entonces $A$ y $B$ no son independientes.
+
+- Si $A$ y $B$ son sucesos independientes, $A$ y $B^c$ también son independientes.
+
+- Si $A$ y $B$ son sucesos independientes, $A^c$ y $B^c$ también son independientes.
+
+Podemos generalizar la independencia a más eventos: Los eventos $A_1, A_2, A_3 , \dots, A_k$ son independientes si
+
+$$P(A_{i_1} \cap A_{i_2} \cap \dots \cap A_{i_k})=P(A_{i_1})P(A_{i_2}). \dots P(A_{i_k})$$
+Para cualquier conjunto de índices $\{i_k\}$ en $\{1,2,3 \dots , n\}$
+
+---
+
+> <font color="Magenta" FONT SIZE=5> Ejemplos adicionales en clase.</font>
+
+---
+
+> <font color="Magenta" FONT SIZE=4>**Ejemplo 1:**</font>
+
+
+Tres amigos desean comprar licor en una tienda de cadena, todos son menores de edad. El cajero desea verificar la edad, les pide su documento de identidad. Luego de revisar y negarles la venta, se los devuelve al azar. La probabilidad de que ninguno de los amigos reciba su propio documento es...
+
+> <font color="Magenta" FONT SIZE=4>**Ejemplo 2:**</font>
+
+En una urna hay 20 bolas: 4 azules, 3 rojas, 7 blancas y 6 verdes. Se extraen 2 bolas (sin sustitución). Responder:
+
+1. ¿Cuál es la probabilidad de que la primera sea azul y la segunda roja?
+2. ¿cuál es la probabilidad de que ambas sean del mismo color?
+3. ¿Cuál es la probabilidad de que la segunda sea azul o roja?
+4. ¿Cuál es la probabilidad de que la primera no sea blanca y la segunda sea verde?
+5. ¿Cuál es la probabilidad de que la segunda sea verde dado que la primera no era blanca?
+
+---
+
+> <font color="Magenta" FONT SIZE=5> Para entregar.</font>
+
+---
+
+
+> <font color="Magenta" FONT SIZE=4>**Ejercicio 1:**</font>
+
+Un estudio realizado en personas de una región determinada mostró que $20\%$ de ellas eran fumadoras. La probabilidad de muerte debida a cáncer pulmonar, dado que una persona fumaba, era alrededor de $10$ veces la probabilidad de muerte debida a cáncer pulmonar de una persona que no fumaba. Si la Probabilidad de muerte debida a cáncer pulmonar en la región es $0.006$, ¿cuál es la probabilidad de
+muerte debida a cáncer pulmonar dado que una persona es fumadora?
+
+> <font color="Magenta" FONT SIZE=4>**Ejercicio 2:**</font> 
+
+Una urna contiene 3 bolas rojas y 7 negras. Los jugadores $A$ y $B$ extraen consecutivamente una bola de la urna, hasta que una bola roja es seleccionada. ¿A qué es igual la probabilidad de que el jugador $A$ extraiga la bola roja? Suponga que la extracción se hace sin sustitución y que el jugador $A$ inicia el juego.
+
+> <font color="Magenta" FONT SIZE=4>**Ejercicio 3:**</font>
+
+En una urna hay 3 bolas rojas y 3 bolas negras. Se extraen 3 bolas de la urna simultaneamente. Si se extraen solamente bolas negras o solo rojas entonces se lanza un dado corriente una vez, en caso contario se lanzan 2 dados corrientes.
+
+1. Calcular la probabilidad que el número total obtenido, en el o los lanzamientos, sea mayor o igual a 4.
+2. Clacular la probabibilidad condicional de que solo se hayan extraído bolas negras o bolas rojas dado que el número total obtenido es 4.
