@@ -1,4 +1,4 @@
-```{r}
+```{r message=FALSE,  echo=FALSE}
 rm(list = ls())
 library(DT)
 library(readr)

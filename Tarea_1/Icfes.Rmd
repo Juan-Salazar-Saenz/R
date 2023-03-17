@@ -1,0 +1,130 @@
+```{r message=FALSE, echo=FALSE , warning=FALSE}
+rm(list = ls())      # Remover variables de entorno.
+library(readr)       # Libreris de lectura de 
+library(tidyverse)
+library(plotly)
+library(DT)
+
+
+BOGOTA <- read_csv("tablas_dept/BOGOTÁ.csv")
+colnames(BOGOTA)
+
+#summary(BOGOTA)
+
+#apply(is.na(BOGOTA), 2, sum)       # No tenemos valores perdidos.
+```
+```{r message=FALSE, echo=FALSE , warning=FALSE}
+new_df <- BOGOTA %>% filter(FAMI_ESTRATOVIVIENDA==c('Estrato 1','Estrato 2','Estrato 3','Estrato 4','Estrato 5','Estrato 6')) %>% filter(ESTU_GENERO==c('F','M')) %>% group_by(FAMI_ESTRATOVIVIENDA , ESTU_GENERO ) 
+#str(new_df)
+```
+
+```{r}
+BOGOTA_IMA1 <- ggplot(new_df) +
+  aes(x=FAMI_ESTRATOVIVIENDA, fill=ESTU_GENERO) +
+  geom_bar( color = 'black') +
+  labs(y="cantidad",x="Estrato",title="Estrato / Genero") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(BOGOTA_IMA1)
+
+BOGOTA_IMA1 <- ggplot(new_df) +
+  aes(x=ESTU_GENERO, fill=FAMI_ESTRATOVIVIENDA) +
+  geom_bar( color = 'black') +
+  labs(y="cantidad",x="Estrato",title="Estrato / Genero") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(BOGOTA_IMA1)
+
+```
+
+```{r message=FALSE, echo=FALSE , warning=FALSE}
+
+frec <- table(new_df$FAMI_ESTRATOVIVIENDA)
+table_frec <- data.frame(cbind(frec))
+table_frec <- table_frec %>% mutate(frec_rela=frec/sum(frec), frec_porcent = 100*frec/sum(frec)) %>% arrange(desc(frec)) %>% mutate(across(everything(), round, 2))
+
+temp <- table_frec
+temp['Estrato'] <- rownames(temp)
+temp$Estrato <- factor(temp$Estrato, levels = temp$Estrato[order(temp$frec, decreasing = TRUE)])
+```
+
+```{r }
+BOGOTA_IMA1 <- ggplot(temp) +
+  aes(Estrato, frec_porcent) +
+  geom_bar(stat = "identity", fill = c("white", "green", "white","white", "green", "white"),
+           color = "grey") + 
+  labs(x = "\nEstudiantes por estrato", y = "", title = "Presencia de estudiantes") + 
+  annotate("text", x = 1:6, y = table_frec$frec_porcent + 0.9, label = paste(temp$frec_porcent,"%"))+
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank())
+
+ggplotly(BOGOTA_IMA1)
+
+```
+
+```{r message=FALSE, echo=FALSE , warning=FALSE}
+new_df2 <- BOGOTA %>% filter(FAMI_ESTRATOVIVIENDA==c('Estrato 1','Estrato 2','Estrato 3','Estrato 4','Estrato 5','Estrato 6'))  %>% group_by(FAMI_ESTRATOVIVIENDA , COLE_GENERO ) 
+#str(new_df2)
+```
+
+```{r}
+BOGOTA_IMA2 <- ggplot(new_df2) +
+  aes(x=FAMI_ESTRATOVIVIENDA, fill=COLE_GENERO) +
+  geom_bar( color = 'black') +
+  labs(y="cantidad",x="Estrato",title="Estrato / Tipo de colegio") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(BOGOTA_IMA2)
+
+BOGOTA_IMA2 <- ggplot(new_df2) +
+  aes(x=COLE_GENERO, fill=FAMI_ESTRATOVIVIENDA) +
+  geom_bar( color = 'black') +
+  labs(y="cantidad",x="Estrato",title="Estrato / Tipo de colegio") +
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank() ) 
+
+ggplotly(BOGOTA_IMA2)
+
+```
+
+```{r message=FALSE, echo=FALSE , warning=FALSE}
+
+frec <- table(new_df2$COLE_GENERO)
+table_frec <- data.frame(cbind(frec))
+table_frec <- table_frec %>% mutate(frec_rela=frec/sum(frec), frec_porcent = 100*frec/sum(frec)) %>% arrange(desc(frec)) %>% mutate(across(everything(), round, 2))
+
+temp <- table_frec
+temp['Tipo_Cole'] <- rownames(temp)
+temp$Tipo_Cole <- factor(temp$Tipo_Cole, levels = temp$Tipo_Cole[order(temp$frec, decreasing = TRUE)])
+##
+
+```
+```{r}
+BOGOTA_IMA2 <- ggplot(temp) +
+  aes(Tipo_Cole, frec_porcent) +
+  geom_bar(stat = "identity", fill = c("blue", "green", "white"),
+           color = "grey") + 
+  labs(x = "\nEstudiantes por Tipo de colegio", y = "", title = "Porcentaje de estudiantes Tipo de colegio") + 
+  annotate("text", x = 1:3, y = table_frec$frec_porcent + 0.9, label = paste(temp$frec_porcent,"%"))+
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank())
+
+ggplotly(BOGOTA_IMA2)
+
+```
+
+```{r message=FALSE, echo=FALSE , warning=FALSE}
+
+new_df3 <- BOGOTA %>% filter(FAMI_ESTRATOVIVIENDA==c('Estrato 1','Estrato 2','Estrato 3','Estrato 4','Estrato 5','Estrato 6'))  %>% group_by(FAMI_ESTRATOVIVIENDA , COLE_GENERO )
+
+  ggplot(new_df3) +
+  aes(FAMI_ESTRATOVIVIENDA, colour = COLE_GENERO) +
+  geom_boxplot() + 
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank())
+  
+  
+BOGOTA %>% filter(FAMI_ESTRATOVIVIENDA %in% c('Estrato 1','Estrato 2','Estrato 3','Estrato 4','Estrato 5','Estrato 6')) %>%
+  ggplot() +
+  aes(COLE_GENERO) +
+  geom_boxplot() + 
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank())
+```
+
+

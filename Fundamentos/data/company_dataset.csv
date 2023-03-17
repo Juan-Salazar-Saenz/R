@@ -1,0 +1,464 @@
+job_title,age_years,performance_score,education,seniority_years,pay_yearly,male_female
+Project Manager,34,33.33,High School,4,118503,M
+Marketing associate,66,16.67,High School,3,129393,M
+Marketing associate,51,50,Masters,8,139440,M
+Sales representative,26,16.67,Masters,3,118191,F
+Account executive,36,50,PhD,4,77717,M
+Dog trainer,36,50,College,6,53533,F
+Account executive,35,33.33,College,7,92030,F
+Dog trainer,18,83.33,College,0,79461,F
+Web Designer,31,50,High School,4,71262,M
+Sales representative,31,83.33,PhD,3,113232,M
+Dog trainer,54,50,High School,5,149799,F
+Account executive,23,50,Masters,3,77655,F
+Marketing associate,35,33.33,Masters,5,119745,M
+Sales representative,48,0,High School,7,115128,F
+Sales representative,44,66.67,High School,4,101147,F
+Account executive,54,50,Masters,7,103652,M
+Sales representative,38,66.67,College,8,99716,F
+Marketing associate,19,100,Masters,2,115238,M
+Web Designer,31,66.67,PhD,3,76617,F
+Account executive,58,33.33,High School,3,90403,M
+Project Manager,60,50,College,8,146689,M
+Project Manager,32,66.67,College,1,74629,M
+Project Manager,46,83.33,College,2,108059,M
+Account executive,62,16.67,Masters,3,101707,M
+Sales representative,23,66.67,College,3,49201,F
+Web Designer,62,33.33,Masters,5,113517,F
+Dog trainer,47,100,High School,7,100801,F
+Dog trainer,60,16.67,PhD,8,140470,F
+Sales representative,42,50,High School,5,80834,M
+Project Manager,48,66.67,High School,9,144418,M
+Dog trainer,52,33.33,Masters,1,66441,F
+Project Manager,37,100,High School,5,97803,M
+Project Manager,58,50,College,6,134098,M
+Web Designer,23,33.33,High School,1,45891,F
+Marketing associate,58,66.67,High School,4,109211,M
+Dog trainer,50,100,Masters,7,85662,M
+Account executive,62,50,PhD,10,140857,F
+Sales representative,40,33.33,High School,7,99282,F
+Dog trainer,60,66.67,Masters,6,104142,M
+Sales representative,53,16.67,PhD,6,93625,F
+Dog trainer,67,33.33,Masters,5,75115,F
+Project Manager,56,83.33,Masters,2,105809,M
+Dog trainer,34,83.33,Masters,5,66819,F
+Sales representative,20,83.33,Masters,4,95751,M
+Sales representative,38,33.33,Masters,1,85884,M
+Marketing associate,20,50,Masters,1,93555,M
+Dog trainer,26,66.67,College,4,51378,M
+Dog trainer,33,16.67,High School,11,94083,F
+Web Designer,66,100,Masters,5,141058,M
+Project Manager,19,33.33,PhD,3,70224,F
+Sales representative,23,0,PhD,4,122063,F
+Web Designer,23,50,College,4,83682,F
+Web Designer,54,100,PhD,5,129859,M
+Dog trainer,62,33.33,Masters,5,113287,F
+Marketing associate,57,0,College,8,119448,F
+Account executive,58,50,High School,8,117407,F
+Dog trainer,47,16.67,PhD,3,73671,F
+Dog trainer,52,33.33,High School,7,100871,F
+Sales representative,45,66.67,High School,2,96838,M
+Dog trainer,42,66.67,College,9,79462,F
+Dog trainer,56,50,High School,5,90548,F
+Dog trainer,24,16.67,High School,3,70118,F
+Project Manager,30,66.67,Masters,4,103200,M
+Dog trainer,40,16.67,PhD,4,75237,F
+Dog trainer,52,66.67,High School,8,93227,F
+Dog trainer,50,0,College,10,92863,F
+Sales representative,30,66.67,PhD,9,104675,M
+Sales representative,19,50,College,3,89315,M
+Sales representative,22,50,Masters,3,95086,F
+Web Designer,56,66.67,Masters,6,102928,F
+Sales representative,37,66.67,PhD,6,110691,F
+Marketing associate,47,33.33,College,5,117620,M
+Sales representative,43,66.67,High School,6,92742,M
+Sales representative,45,66.67,Masters,3,88226,F
+Dog trainer,57,50,Masters,3,71288,F
+Sales representative,57,16.67,College,5,111598,F
+Sales representative,59,50,High School,8,96745,M
+Sales representative,47,83.33,PhD,3,99756,F
+Sales representative,44,33.33,PhD,7,109620,M
+Dog trainer,42,66.67,Masters,6,86345,F
+Account executive,24,50,PhD,4,110630,M
+Web Designer,61,66.67,PhD,1,110063,M
+Web Designer,52,83.33,College,3,113791,F
+Web Designer,55,66.67,High School,6,118431,M
+Web Designer,41,83.33,High School,3,98655,F
+Account executive,54,66.67,Masters,9,128488,F
+Dog trainer,45,83.33,Masters,7,107020,F
+Web Designer,49,83.33,Masters,5,102795,M
+Project Manager,28,66.67,College,5,74140,F
+Dog trainer,30,16.67,High School,4,57711,M
+Sales representative,51,66.67,High School,6,111246,M
+Account executive,21,33.33,PhD,3,103432,M
+Web Designer,59,0,PhD,7,88925,F
+Dog trainer,43,50,High School,9,95242,M
+Dog trainer,54,33.33,College,6,115532,M
+Web Designer,54,100,College,10,126235,M
+Dog trainer,32,100,High School,1,53636,F
+Project Manager,62,83.33,College,9,181662,M
+Project Manager,57,66.67,Masters,7,140598,M
+Marketing associate,29,66.67,High School,3,99623,M
+Dog trainer,44,33.33,High School,4,97574,M
+Project Manager,62,66.67,PhD,8,158941,M
+Dog trainer,35,83.33,High School,3,105266,M
+Sales representative,25,50,High School,0,56583,M
+Dog trainer,56,33.33,PhD,3,63691,M
+Project Manager,55,33.33,Masters,7,145686,F
+Marketing associate,62,33.33,PhD,6,122482,M
+Sales representative,49,33.33,High School,2,90329,F
+Account executive,47,83.33,College,3,113951,F
+Account executive,38,66.67,Masters,7,94802,M
+Account executive,33,66.67,College,6,61537,F
+Web Designer,18,50,PhD,0,60553,M
+Sales representative,65,100,PhD,0,123037,M
+Marketing associate,53,83.33,PhD,6,150829,M
+Project Manager,22,66.67,High School,2,95661,M
+Account executive,22,16.67,Masters,3,58821,M
+Project Manager,58,0,Masters,9,118818,M
+Sales representative,22,0,Masters,4,59455,F
+Project Manager,38,50,PhD,4,101670,F
+Project Manager,37,0,Masters,9,106038,F
+Sales representative,35,0,College,7,43848,M
+Dog trainer,67,0,High School,8,116325,M
+Dog trainer,52,33.33,PhD,9,120830,M
+Dog trainer,51,33.33,PhD,6,96972,F
+Dog trainer,33,83.33,College,8,103014,M
+Project Manager,59,16.67,High School,3,152069,F
+Project Manager,28,66.67,College,10,110682,F
+Sales representative,38,16.67,Masters,1,55059,M
+Dog trainer,25,16.67,College,1,54420,F
+Dog trainer,62,33.33,College,7,120148,M
+Account executive,22,50,High School,2,67704,M
+Account executive,37,50,College,3,71030,F
+Marketing associate,36,66.67,High School,7,109121,M
+Account executive,45,33.33,High School,5,95206,M
+Account executive,68,83.33,PhD,2,135168,F
+Web Designer,35,83.33,College,9,97902,F
+Dog trainer,63,33.33,High School,5,97990,F
+Dog trainer,26,0,PhD,4,96117,F
+Web Designer,38,0,High School,7,117874,M
+Project Manager,29,100,PhD,4,53867,F
+Sales representative,62,50,College,5,108360,F
+Marketing associate,65,50,PhD,5,143183,M
+Dog trainer,26,16.67,High School,5,49285,F
+Sales representative,33,83.33,High School,1,78182,M
+Account executive,30,83.33,Masters,7,105380,F
+Dog trainer,42,66.67,PhD,1,71160,F
+Web Designer,59,33.33,Masters,2,87509,M
+Dog trainer,59,33.33,Masters,1,77507,F
+Marketing associate,27,100,High School,4,96559,M
+Account executive,59,66.67,College,7,132381,M
+Project Manager,60,83.33,High School,5,101214,F
+Marketing associate,62,33.33,High School,4,130743,M
+Project Manager,55,33.33,College,5,134698,M
+Marketing associate,20,66.67,Masters,1,131388,M
+Web Designer,20,66.67,Masters,2,44294,F
+Project Manager,41,0,PhD,7,128578,M
+Account executive,57,66.67,PhD,5,142991,M
+Project Manager,31,33.33,Masters,2,119627,F
+Marketing associate,30,50,High School,2,85482,M
+Project Manager,46,16.67,College,8,81649,F
+Account executive,57,0,High School,7,89656,F
+Marketing associate,20,83.33,Masters,2,103972,F
+Account executive,68,50,PhD,7,126788,F
+Dog trainer,58,50,College,4,72495,F
+Dog trainer,39,100,High School,6,95464,F
+Dog trainer,30,100,College,5,86787,F
+Web Designer,42,50,High School,6,104027,M
+Dog trainer,27,50,College,9,55689,M
+Dog trainer,41,83.33,College,4,79756,M
+Project Manager,62,0,PhD,4,138025,M
+Sales representative,19,83.33,College,2,77922,F
+Marketing associate,50,83.33,High School,4,100464,M
+Web Designer,55,50,High School,6,75107,F
+Project Manager,53,66.67,College,6,74061,F
+Account executive,43,0,College,4,96736,M
+Account executive,62,66.67,College,2,110422,F
+Web Designer,42,33.33,College,2,91216,M
+Sales representative,46,83.33,College,4,101158,F
+Project Manager,60,83.33,College,5,99278,M
+Sales representative,19,66.67,College,3,68562,F
+Sales representative,53,33.33,Masters,7,95269,M
+Project Manager,32,33.33,Masters,2,130311,M
+Account executive,34,83.33,High School,3,92879,F
+Sales representative,34,16.67,Masters,3,75486,M
+Web Designer,40,66.67,PhD,8,133232,F
+Marketing associate,33,33.33,PhD,1,83483,F
+Account executive,35,100,Masters,2,77414,M
+Project Manager,34,50,High School,9,87333,F
+Sales representative,27,0,High School,5,88954,M
+Web Designer,44,50,PhD,10,150172,F
+Sales representative,21,50,High School,4,91284,M
+Dog trainer,21,100,Masters,4,87284,F
+Project Manager,65,66.67,PhD,9,183827,F
+Web Designer,19,83.33,Masters,3,77082,M
+Dog trainer,33,50,High School,8,97471,M
+Account executive,34,16.67,PhD,5,55398,F
+Sales representative,44,83.33,High School,4,104810,M
+Web Designer,19,83.33,PhD,1,60150,M
+Account executive,59,16.67,PhD,4,123085,M
+Sales representative,21,83.33,PhD,4,109564,M
+Project Manager,52,50,PhD,10,163919,M
+Web Designer,35,33.33,College,5,49815,M
+Marketing associate,20,83.33,Masters,2,70294,M
+Account executive,48,100,High School,8,162077,F
+Dog trainer,19,50,Masters,1,49613,F
+Marketing associate,36,50,PhD,4,132105,M
+Sales representative,36,33.33,College,7,112341,M
+Project Manager,42,16.67,Masters,7,117170,M
+Web Designer,21,83.33,High School,3,120813,F
+Dog trainer,38,100,College,6,118381,F
+Account executive,22,16.67,Masters,0,75433,F
+Sales representative,53,66.67,High School,5,121235,F
+Web Designer,31,16.67,College,7,104374,M
+Marketing associate,56,33.33,PhD,2,123689,M
+Sales representative,59,83.33,High School,6,110540,F
+Web Designer,59,0,High School,6,120817,F
+Dog trainer,45,33.33,Masters,8,105977,F
+Web Designer,29,0,PhD,6,125751,F
+Dog trainer,21,100,College,3,66729,F
+Sales representative,58,33.33,Masters,6,150655,F
+Dog trainer,21,16.67,High School,3,75108,F
+Web Designer,32,16.67,Masters,0,83577,M
+Account executive,23,50,High School,4,95082,M
+Marketing associate,57,16.67,High School,3,117569,F
+Dog trainer,34,100,PhD,9,114702,F
+Account executive,38,50,Masters,10,110940,M
+Web Designer,51,16.67,Masters,7,98698,F
+Marketing associate,60,66.67,College,3,126772,M
+Sales representative,35,33.33,Masters,4,104348,F
+Dog trainer,26,33.33,College,7,90369,M
+Project Manager,19,33.33,College,1,110904,M
+Marketing associate,26,66.67,PhD,6,135808,M
+Marketing associate,60,16.67,PhD,4,141199,M
+Project Manager,51,33.33,High School,7,155608,M
+Dog trainer,60,16.67,College,4,120420,F
+Marketing associate,55,66.67,PhD,4,115855,M
+Marketing associate,47,33.33,Masters,5,141012,M
+Marketing associate,22,100,College,2,97232,M
+Dog trainer,24,66.67,Masters,6,82642,F
+Marketing associate,60,16.67,High School,5,132088,M
+Sales representative,60,33.33,PhD,8,131768,M
+Project Manager,65,50,College,2,131802,M
+Project Manager,19,50,High School,2,52403,F
+Account executive,51,50,Masters,2,108991,M
+Sales representative,39,66.67,College,4,96184,M
+Sales representative,23,33.33,College,4,80603,M
+Web Designer,45,83.33,High School,2,108776,F
+Marketing associate,36,0,High School,3,80836,M
+Sales representative,45,0,PhD,10,121840,F
+Marketing associate,59,16.67,Masters,1,112600,M
+Dog trainer,22,33.33,Masters,4,76241,F
+Account executive,49,50,High School,6,74423,M
+Project Manager,59,16.67,High School,2,122588,M
+Project Manager,31,33.33,Masters,5,99874,M
+Sales representative,61,16.67,Masters,5,127274,M
+Dog trainer,64,83.33,PhD,9,134472,F
+Account executive,45,50,Masters,9,94516,F
+Dog trainer,64,16.67,PhD,4,96459,F
+Marketing associate,70,66.67,High School,4,115196,M
+Sales representative,46,33.33,Masters,10,105310,M
+Dog trainer,55,50,PhD,6,128658,F
+Marketing associate,40,66.67,PhD,6,98964,M
+Sales representative,51,100,High School,6,110124,M
+Account executive,51,50,College,7,96468,F
+Account executive,22,66.67,Masters,3,62677,M
+Project Manager,52,66.67,PhD,9,165721,M
+Dog trainer,58,16.67,College,5,63098,F
+Account executive,59,16.67,College,3,100150,M
+Sales representative,60,83.33,Masters,5,120962,M
+Account executive,36,16.67,High School,4,60567,M
+Project Manager,25,50,College,0,61197,F
+Sales representative,20,16.67,College,2,51242,F
+Project Manager,34,66.67,Masters,6,93756,F
+Marketing associate,65,83.33,High School,2,107096,M
+Project Manager,21,33.33,PhD,5,114144,M
+Dog trainer,31,66.67,High School,2,54371,F
+Project Manager,23,66.67,PhD,2,84607,F
+Dog trainer,48,33.33,College,5,52261,F
+Sales representative,50,16.67,High School,9,104597,M
+Marketing associate,20,16.67,PhD,2,87277,M
+Web Designer,45,16.67,PhD,8,112987,F
+Project Manager,48,33.33,High School,3,89798,M
+Dog trainer,46,16.67,College,5,85693,F
+Sales representative,37,100,High School,9,126340,F
+Account executive,56,33.33,College,2,115656,F
+Sales representative,25,33.33,High School,4,70692,M
+Dog trainer,25,66.67,Masters,6,105167,F
+Project Manager,36,16.67,College,9,131254,M
+Web Designer,53,33.33,High School,8,89853,M
+Account executive,48,50,College,8,92974,M
+Project Manager,67,50,High School,1,111924,M
+Project Manager,22,50,PhD,4,120366,M
+Marketing associate,24,100,Masters,4,108817,M
+Account executive,23,16.67,PhD,4,80208,M
+Dog trainer,46,33.33,Masters,7,78720,F
+Account executive,37,66.67,Masters,9,107767,M
+Project Manager,37,66.67,College,7,91060,F
+Project Manager,55,83.33,Masters,6,152417,M
+Web Designer,33,83.33,High School,7,86420,F
+Sales representative,34,66.67,PhD,5,77737,M
+Dog trainer,48,50,PhD,8,107175,F
+Project Manager,55,33.33,Masters,2,110412,M
+Account executive,66,50,High School,7,105963,M
+Project Manager,22,83.33,Masters,3,120357,M
+Sales representative,43,50,PhD,7,99893,M
+Sales representative,19,66.67,College,1,67207,M
+Account executive,63,83.33,PhD,4,118075,M
+Project Manager,23,100,High School,2,65945,M
+Sales representative,20,83.33,PhD,3,90163,M
+Project Manager,21,16.67,Masters,2,106102,M
+Project Manager,54,16.67,Masters,8,149110,F
+Project Manager,51,33.33,Masters,4,100641,M
+Project Manager,27,33.33,PhD,6,118602,M
+Account executive,61,0,Masters,6,145279,F
+Account executive,21,83.33,High School,0,79458,M
+Account executive,46,33.33,Masters,8,125113,M
+Dog trainer,32,16.67,Masters,6,87961,F
+Marketing associate,55,66.67,PhD,10,134079,M
+Sales representative,29,50,High School,4,71529,F
+Sales representative,20,0,PhD,0,95257,M
+Marketing associate,37,66.67,PhD,6,99039,M
+Account executive,22,50,Masters,4,95655,M
+Marketing associate,36,33.33,Masters,2,87960,M
+Sales representative,20,50,College,2,78650,M
+Account executive,47,66.67,High School,10,126298,F
+Account executive,25,66.67,Masters,0,100340,M
+Project Manager,23,16.67,High School,4,104835,F
+Project Manager,56,50,PhD,6,105614,F
+Dog trainer,56,33.33,High School,2,94029,F
+Marketing associate,19,100,College,2,121648,M
+Web Designer,34,66.67,College,9,133411,F
+Dog trainer,59,100,PhD,4,133579,F
+Web Designer,69,100,Masters,9,140131,F
+Sales representative,26,50,Masters,7,97495,F
+Project Manager,25,66.67,High School,1,72725,M
+Marketing associate,63,16.67,High School,5,101558,M
+Account executive,36,50,Masters,3,73684,F
+Account executive,50,50,Masters,5,137706,F
+Account executive,39,50,PhD,7,98144,M
+Project Manager,51,16.67,PhD,8,111987,F
+Dog trainer,20,66.67,High School,1,40927,F
+Dog trainer,21,16.67,High School,1,75636,M
+Marketing associate,30,16.67,College,3,70440,M
+Dog trainer,56,0,College,6,116813,F
+Marketing associate,35,66.67,PhD,3,105857,M
+Sales representative,59,66.67,College,3,88418,M
+Account executive,41,33.33,PhD,5,93286,M
+Dog trainer,38,50,Masters,4,108700,M
+Web Designer,33,33.33,Masters,5,108483,M
+Sales representative,53,50,Masters,3,82014,F
+Dog trainer,46,50,High School,5,47226,F
+Account executive,30,83.33,High School,7,101694,F
+Project Manager,27,83.33,High School,4,81577,F
+Account executive,54,16.67,PhD,2,67323,F
+Marketing associate,35,33.33,High School,8,105719,M
+Sales representative,66,33.33,College,4,93367,F
+Marketing associate,63,0,College,7,157354,M
+Web Designer,24,66.67,College,2,58049,F
+Account executive,56,33.33,Masters,3,97694,F
+Web Designer,48,33.33,College,3,74018,M
+Project Manager,58,83.33,PhD,1,97919,F
+Account executive,29,50,High School,9,123344,F
+Project Manager,53,16.67,High School,7,111223,M
+Project Manager,61,33.33,Masters,6,128991,F
+Project Manager,53,16.67,Masters,6,87061,F
+Marketing associate,34,50,Masters,7,94919,M
+Dog trainer,29,33.33,Masters,7,75514,F
+Project Manager,44,33.33,High School,9,144306,F
+Project Manager,23,50,College,5,140990,M
+Web Designer,44,100,PhD,4,114581,F
+Account executive,48,66.67,High School,4,106219,F
+Dog trainer,24,83.33,Masters,3,83123,F
+Sales representative,23,50,Masters,1,68586,M
+Account executive,35,16.67,High School,4,87389,M
+Dog trainer,21,50,College,1,89038,F
+Sales representative,62,66.67,Masters,3,91544,M
+Account executive,47,83.33,College,6,66035,M
+Dog trainer,42,66.67,College,5,105388,M
+Dog trainer,19,33.33,College,3,42282,F
+Project Manager,37,33.33,College,9,140144,M
+Sales representative,54,100,College,8,147604,F
+Sales representative,35,66.67,College,2,56934,F
+Project Manager,69,16.67,PhD,6,114482,F
+Project Manager,50,100,High School,3,104161,M
+Dog trainer,53,16.67,High School,4,84769,F
+Marketing associate,41,66.67,PhD,6,103060,F
+Account executive,46,66.67,Masters,3,98548,M
+Dog trainer,63,33.33,College,10,105464,F
+Marketing associate,66,66.67,High School,7,130378,M
+Sales representative,27,50,PhD,5,80359,F
+Dog trainer,66,66.67,High School,6,98629,F
+Dog trainer,28,33.33,College,2,74526,F
+Account executive,46,50,Masters,3,86319,F
+Dog trainer,28,33.33,High School,5,38006,F
+Account executive,26,33.33,College,7,98939,F
+Sales representative,43,0,College,7,87038,F
+Project Manager,20,16.67,High School,1,71234,M
+Project Manager,40,83.33,Masters,10,149244,F
+Sales representative,59,100,Masters,4,82445,M
+Dog trainer,22,83.33,College,3,78261,F
+Sales representative,24,83.33,PhD,2,76186,F
+Dog trainer,36,100,High School,7,50802,F
+Account executive,33,66.67,Masters,9,127514,M
+Dog trainer,48,16.67,College,6,74971,F
+Account executive,37,0,High School,5,90917,F
+Account executive,65,100,High School,5,125367,M
+Dog trainer,51,66.67,College,8,101679,M
+Dog trainer,58,66.67,PhD,4,107830,M
+Project Manager,23,83.33,High School,3,89621,M
+Web Designer,57,33.33,College,7,89361,M
+Web Designer,25,50,High School,5,95861,M
+Account executive,44,33.33,College,5,116347,F
+Dog trainer,33,66.67,PhD,7,102672,M
+Sales representative,29,66.67,College,10,126001,M
+Project Manager,18,100,High School,0,73425,M
+Dog trainer,43,50,PhD,5,97698,M
+Project Manager,42,50,College,5,109839,F
+Account executive,55,16.67,PhD,7,137215,F
+Sales representative,42,83.33,College,9,92433,F
+Project Manager,28,33.33,PhD,7,130695,F
+Account executive,58,66.67,Masters,9,125626,F
+Account executive,51,33.33,College,3,95740,M
+Sales representative,61,50,High School,5,112837,M
+Web Designer,21,66.67,High School,1,55024,M
+Account executive,57,66.67,Masters,7,125281,M
+Project Manager,50,33.33,High School,6,131284,F
+Marketing associate,48,33.33,College,3,125198,M
+Marketing associate,24,50,High School,3,74240,M
+Account executive,32,16.67,PhD,7,96267,M
+Sales representative,49,66.67,Masters,6,101967,M
+Web Designer,55,66.67,College,11,138514,M
+Account executive,39,83.33,High School,10,119051,F
+Account executive,59,16.67,High School,0,97036,M
+Project Manager,40,50,Masters,6,151442,M
+Dog trainer,31,66.67,Masters,1,69911,F
+Account executive,28,33.33,College,5,50213,F
+Sales representative,50,50,Masters,8,115008,F
+Account executive,64,83.33,Masters,3,94043,F
+Account executive,19,33.33,College,2,98029,F
+Sales representative,18,66.67,College,0,70757,F
+Dog trainer,27,66.67,Masters,8,62544,F
+Sales representative,41,66.67,High School,7,120275,M
+Sales representative,63,16.67,Masters,4,107286,M
+Sales representative,21,16.67,Masters,3,68523,F
+Dog trainer,36,16.67,PhD,9,123472,F
+Dog trainer,23,83.33,College,5,100875,M
+Dog trainer,56,83.33,College,5,79019,M
+Dog trainer,33,83.33,PhD,3,92138,M
+Sales representative,34,66.67,PhD,9,134261,F
+Account executive,42,33.33,High School,2,77034,M
+Sales representative,27,83.33,PhD,5,45144,M
+Account executive,31,50,PhD,4,98761,F
+Web Designer,34,66.67,Masters,8,73979,F
+Sales representative,40,16.67,Masters,6,122588,M
+Sales representative,40,16.67,High School,11,106330,F
+Web Designer,19,50,PhD,3,87811,M
+Dog trainer,29,66.67,High School,5,106584,F
+Sales representative,39,100,PhD,5,122786,M
+Dog trainer,59,100,PhD,9,120852,M
+Dog trainer,40,66.67,College,8,96368,F
+Sales representative,58,33.33,College,7,112027,F
+Dog trainer,53,83.33,PhD,5,89330,F
+Web Designer,41,50,College,3,85458,F
