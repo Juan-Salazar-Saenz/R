@@ -398,7 +398,7 @@ ggplot(puntuacion_df) +
   aes(x=genero, fill=jornada) +
   geom_bar() +
   facet_wrap( ~ estrato) +
-  labs(y="cantidad",x="Estrato",title="presentacion de examen pot estrato y genero \n") +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por estrato y genero / jornada \n") +
   annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
 
 ```
@@ -433,7 +433,7 @@ ggplot(puntuacion_df) +
   aes(x=genero, fill=internet) +
   geom_bar() +
   facet_wrap( ~ estrato) +
-  labs(y="cantidad",x="Estrato",title="presentacion de examen pot estrato y genero \n") +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por estrato y genero / internet \n") +
   annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
 
 ```
