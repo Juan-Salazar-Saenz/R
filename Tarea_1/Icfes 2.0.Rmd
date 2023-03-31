@@ -437,6 +437,69 @@ ggplot(puntuacion_df) +
   annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
 
 ```
+```{r}
+library(ggplot2)
+
+ggplot(icfes, aes(x=FAMI_PERSONASHOGAR, fill=FAMI_TIENEINTERNET)) +
+  geom_bar() +
+  scale_x_discrete(labels=c("1,2","3,4","5,6","7,8","9,+"))+
+  xlab("") +
+  ylab("") +
+  facet_wrap( ~ FAMI_ESTRATOVIVIENDA) +
+  theme_minimal() +
+  ggtitle("Núcleo familiar")
+ 
+
+p3 <- ggplot(icfes, fill="red") +
+  aes(x=FAMI_EDUCACIONPADRE)+
+  geom_bar(color = 'blue') + 
+  scale_x_discrete(labels=c("pro c", "pro in ", "na", "no aplica", "no sabe", "Post","Pri c","Pri in","Secu c","Secu in","tecno c","tecno in"))+
+  xlab("") + ylab("") +
+  ggtitle("Educación papá") +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+p4 <- ggplot(icfes, aes(x=FAMI_EDUCACIONMADRE, fill="red")) +
+  geom_bar(color='red') +
+  scale_x_discrete(labels=c("pro c", "pro in ", "na", "no aplica", "no sabe", "Post","Pri c","Pri in","Secu c","Secu  in","tecno c","tecno in"))+
+  xlab("") +
+  ylab("") +
+  ggtitle("Educación mamá")+
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+ggarrange( p3, p4, ncol=2)
+
+
+
+
+```
+```{r}
+
+# Estadística descriptiva detallada
+library(psych)
+library(tidyr)
+library(dplyr)
+
+# Seleccionar solo las variables numéricas
+icfes_num <- icfes[, sapply(icfes, is.numeric)]
+
+# Excluir la variable PUNT_GLOBAL
+icfes_num_1 <- select(icfes_num, -PUNT_GLOBAL)
+
+# Convertir datos de ancho a largo
+icfes_long <- gather(icfes_num_1, key = "variable", value = "valor")
+
+# Hacer el gráfico de densidad
+ggplot(icfes_long, aes(x = valor, fill = variable)) + 
+  geom_density(alpha = 0.5) +
+  theme_classic() +
+  scale_fill_hue(name = "Variable",
+                 labels = names(icfes_num_1)) +
+  labs(x = "Valor", y = "Densidad") +
+  ggtitle("Gráfico de densidad por asignaturas")
+
+
+```
+
 
 
 
