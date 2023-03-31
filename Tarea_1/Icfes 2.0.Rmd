@@ -308,6 +308,12 @@ colnames(puntuacion_df) <- c("global","genero","año")
 #Filtramos para quitar los estremos vacios
 grafica3 <- filter(puntuacion_df,año > 1970)
 
+ggplot(grafica3)+
+  aes(global, año, colour = genero) + 
+  geom_point() +
+  labs(x = '', y = '', title = 'Puntuacion vs año * genero') +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf) 
+
 BOGOTA_IMA1 <- ggplot(grafica3)+
   aes(global, año, colour = genero) + 
   geom_point() +
@@ -392,8 +398,8 @@ ggplot(puntuacion_df) +
   aes(x=genero, fill=jornada) +
   geom_bar() +
   facet_wrap( ~ estrato) +
-  labs(y="cantidad",x="Estrato",title="presentacion de examen pot estrato y genero \n") 
-
+  labs(y="cantidad",x="Estrato",title="presentacion de examen pot estrato y genero \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
 
 ```
 ```{r}
@@ -427,7 +433,8 @@ ggplot(puntuacion_df) +
   aes(x=genero, fill=internet) +
   geom_bar() +
   facet_wrap( ~ estrato) +
-  labs(y="cantidad",x="Estrato",title="presentacion de examen pot estrato y genero \n") 
+  labs(y="cantidad",x="Estrato",title="presentacion de examen pot estrato y genero \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
 
 ```
 
