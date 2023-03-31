@@ -1,0 +1,370 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 12: Variables Aleatorias-Funciones de Probabilidad.***
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+> ## _Software de apoyo: `R.`_
+
+
+
+<font color = "blue" FONT SIZE =7> __ </font>
+
+Vamos a abordar los siguientes conceptos.
+
+- <span style="color:Magenta">Variables Aleatorias</span>
+
+- <span style="color:orange">Funciones de Probabilidad</span>
+
+- <span style="color:blue">Función de Densidad</span>
+
+- <span style="color:purple">Parámetros de una Variable Aleatoria</span>
+
+<font color = "blue"FONT SIZE = 6>***Variables Aleatorias***</font>
+
+
+
+
+Una variable aleatoria es la descripción numérica  del resultado de un experimento.
+
+Para simbolizar o notar las variables aleatorias usamos letras mayúsculas: $X$, $Y$, $Z$, etc., y los valores que puede tomar esta variable aleatoria los notamos con letras minúsculas : $x$, $y$, $z$, etc.
+
+Veamos la definición formal:
+
+<font color = "blue" FONT SIZE = 5>***Definición [Variables Aleatorias]:***</font>
+
+
+Una variable aleatoria $X$ es una función que asigna a cada evento del espacio muestral $\Omega$ de un experimento aleatorio un valor numérico real, es decir
+
+$$\begin{align*} X \,  :& \, \Omega \longrightarrow \mathbb{R} \\ & \omega \longrightarrow X(\omega) \end{align*}$$
+*Es importante indicar que si bien se denomina variable, en realidad es una función*.
+
+Hay dos tipos de variables aleatorias
+
+<font color = "blue" FONT SIZE = 4>***Discreta***</font>
+
+La variable aleatoria se dice discreta si los números asignados a los eventos elementales de $\Omega$ son aislados. Es decir, toma un número finito o infinito contable de valores que se puede representar, por ejemplo, con $1,2,3,4, \dots$
+
+<font color = "blue" FONT SIZE = 4>***Continua***</font>
+
+La variable aleatoria toma cualquier valor numérico dentro de un intervalo o colección de intervalos.
+
+<font color = "Magenta" FONT SIZE = 4>***Veamos algunos ejemplos***</font>
+
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo 1</font>:
+ 
+Suponga que se prueban 3 componentes electrónicos, nos interesa el número de componentes defectuosos, luego:
+
+$$\Omega=\{NNN,NND,NDN,DNN,NDD,DND,DDN,DDD\}$$
+Donde $N$ significa no defecutoso y $D$ defectuoso.
+
+Ahora, a cada elemento de $\Omega$ se le asignará un número 0,1,2 o 3. Estos valores son por supuesto cantidades aleatorias determinadas por el resultado del experimento. Luego podemos definir:
+$$X=\text{# de artículos defectuosos cuando se prueban 3 componentes}$$
+
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo 2</font>
+
+Consideremos el experimento de lanzar un dado y observar la cara superior. En este caso, tenemos seis eventos descritos asi:
+$$E_{i}= \text{se obtiene el número} \, i : \quad i=1,2,3,4,5,6$$
+$$X = \text{Número obtenido al lanzar el dado}$$
+Así:
+
+$$X \, : \, \Omega \longrightarrow \mathbb{R} \\ X(E_{i})=i$$
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo 3</font>: 
+
+Consideremos el expermiento de lanzar dos monedas. Los posibles resultados son $\Omega=\{(C,C),(C,S), (S,C), (S,S)\}$. Podemos definir la variable aleatoria que indica el numéro de sellos de los resultados. En este caso 
+
+$$X(\omega)= \begin{cases} 1 & si \quad \omega= (C,S) \, o \,  (S,C)   \\ 0 & si \quad \omega=(C,C) \\ 2 & si \quad \omega=(S,S)\end{cases} $$
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo 4</font>: 
+
+El experimento consiste en preguntar a las personas de una ciudad si son solteras o casadas. En esta caso la variable puede tomar valores en el conjunto $\mathbb{N}$. La Variable Aleatoria $X$ que indica el número de personas que son solteras.
+
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo 5</font>:
+
+En una sucursal de un banco el tiempo de atención va desde un segundo hasta 10 minutos. Si registramos los datos de atención de los clientes, podemos definir la variable aleatoria $Y$: tiempo de atención a los clientes del banco en segundos.
+
+$$Y \, : \, \Omega \longrightarrow [1,600] \\ Y(C_{i})= \text{tiempo de atencion del cliente} \, i$$
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo 6</font>: 
+
+A partir de la información de un grupo de estudiantes mediciones en un grupo de estudiantes,  la estatura de un grupo de estudiantes se puede definir una variable aleatoria continua 
+
+
+<font color = "blue" FONT SIZE = 5>***Función o distribución de Probabilidad***</font>
+
+
+La función o distribución de probabilidad es un módelo teórico que describe la forma en que varían los resultados de un experimento aleatorio, es decir, da las probabilidades de todos los posibles resultados que podrían obtenerse cuando se realiza un expermiento aleatorio. En este caso, también tenemos dos tipos de distribución: discretas y continuas.
+
+
+<font color = "blue" FONT SIZE = 4>Distribución de probabilidad: variable discreta</font>:
+
+Una distribución de probabilidad* para una variable aleatoria discreta es una fórmula, tabla o gráfica que describe los posibles valores de la variable aleatoria y su respectiva probabilidad. Es decir, a cada valor $x$ de $X$ le asigna una probabilidad $P(x)$.
+
+$$\begin{align*} f \, :& \, \mathbb{R} \longrightarrow [0,1] \\ & x \longrightarrow f(x)= \begin{cases} P(X=x) & si \quad x=x_1, x_2, \dots \\ 0 & \text{en otro caso}  \end{cases} \end{align*}$$
+Una distribución de probabilidad discreta cumple las siguientes dos condiciones:
+
+1. $0\leq f(x)\leq 1$
+
+2. $\sum \limits_{i} f(x_i) = 1$. Donde $x_i$ son los valores que puede asumir la variable aleatoria discreta.
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo:</font>:
+
+El experimento consiste en lanzar dos monedas y la variable aleatoria $X$ determina el número de sellos. Calcular la función de probabilidad. 
+
+**Solución:** Se define $X$ : número de sellos obtenidos. Entonces los eventos posibles son:
+
+- $E_1= (C,C)$, se obtienen dos caras
+
+- $E_2= (C,S)$, en una moneda se obtiene cara y en la otra sello.
+
+- $E_3= (S,C)$, en una moneda se obtiene sello y en la otra cara.
+
+- $E_4= (S,S)$, en ambas monedas se obtienen sellos.
+
+Luego, 
+
+$$X(\omega)= \begin{cases} 0 & si \quad \omega=E_1 \\ 1 & si \quad \omega= E_2 \, o \,  E_3   \\  2 & si \quad \omega=E_4\end{cases} $$
+los valores de $x_i$ son $x_1=0$, $x_2=1$ y $x_3=2$. Así, para cada valor $x$ de $X$ podemos calcular la probabilidad.
+
+- $P(X=0)=P(E_1)=\dfrac{1}{4}$, esto quiere decir que la probabilidad de que no salgan sellos es $\dfrac{1}{4}$.
+
+- $P(X=1)=P(E_2 \cup E_3)=\dfrac{2}{4}$, esto quiere decir que la probabilidad de que salga un sello es $\dfrac{1}{2}$.
+
+- $P(X=2)=P(E_4)=\dfrac{1}{4}$, esto quiere decir que la probabilidad de que salgan dos sellos es $\dfrac{1}{4}$.
+
+Esto lo podemos representar es una tabla, en una gráfica, o simplemente
+
+$$f(x) = \begin{cases} \dfrac{1}{4} & si \quad x= 0 \\ \dfrac{2}{4} & si \quad x=1    \\  \dfrac{1}{4} & si \quad x=2\end{cases} $$
+
+Observe que $0 \leq f(x) \leq 1$ y además 
+
+$$\sum \limits_{x}f(x)=f(0)+f(1)+f(2)= P(X=0)+P(X=1)+P(X=2)=\dfrac{1}{4}+\dfrac{2}{4}+\dfrac{1}{4}=1$$
+
+>  <font color = "Magenta" FONT SIZE = 4>***Ejercicio en clase***</font>
+
+En un salón de clase se escogen dos personas para un comité, de un grupo de 7 candidatos, de los cuales 4 son hombres y 3 son mujeres. Defina $X$ como el número de mujeres escogidas para ocupar los puestos del comité. Defina la distribución de probabilidad y verifique las dos condiciones.
+
+
+***Solución:***
+
+$X$ es el número de mujeres escogidas para ocupar los puestos del comité, luego los valores de $X$ son 0,1 o 2.
+
+- $P(X=0)$ = $\binom{4}{2}*\binom{3}{0}/\binom{7}{2}=0.2857$
+- $P(X=1)$ = $\binom{4}{1}*\binom{3}{1}/\binom{7}{2}=0.5714$
+- $P(X=2)$ = $\binom{4}{0}*\binom{3}{2}/\binom{7}{2}=0.1428$
+ 
+> <font color = "Magenta" FONT SIZE = 4>***Ejercicio para la casa # 1***</font>
+
+Verifique que la siguiente función es una función de probabilidad.
+
+$$f(x)= \begin{cases} \left (\dfrac{1}{2}\right)^x & si \quad x=1,2,3, \dots \\ 0 & \text{en otro caso} \end{cases}$$
+
+<font color = "blue" FONT SIZE = 4> ***Función de Probabilidad Caso Continuo:***</font>:
+
+Sea $X$ una variable aleatoria continua. Una función 
+$$f(x) \, : \, \mathbb{R} \longrightarrow \mathbb{R} $$
+
+se dice función de probabilidad para la variable aleatoria $X$ si:
+
+1. $f(x) \geq 0$
+
+2. $P(X \in (a,b))= \int_a^b f(x)\, dx$, para todo intervalo $(a,b) \in \mathbb{R}$.
+
+Esta función cumple dos propiedades importantes:
+
+1. $f(x) \geq 0$
+
+2. $\int_{-\infty}^{\infty} f(x) \, dx = 1$
+
+En este caso se dice también **Función de Densidad**
+ 
+Veamos algunos ejemplos
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo</font>:
+
+Sea $X$ una variable aleatoria continua con función de densidad
+
+$$f(x)= \begin{cases} 2x & si \quad 0<x<1 \\ 0 & \text{en otro caso} \end{cases}$$
+**Solución** Debemos vericar que:
+
+$$\int_{-\infty}^{+\infty} f(x) \, dx =1$$
+Luego:
+
+$$\int_{-\infty}^{+\infty} f(x) \, dx = \int_{0}^{1} 2x\, dx = x^2|^{1}_{0}=1$$
+
+<font color = "blue" FONT SIZE = 5>***Función de distribución***</font>
+
+La función de distribución describe el comportamiento probabilístico de una variable aleatoria $X$ asociada a un experimento aleatorio y se representa como $F(x)$ o simplemente $F_x$. 
+
+Si tenemos una variable aleatoria $X$, la **la función de distribución F(x) se define como**
+
+$$F(x)=P(X \leq x)$$
+
+Observaciones:
+
+1. También se denota como $F_X(x)$.
+
+2. Se le llama también **función de acumulación de probabilidad**.
+
+3. Si $X$ es una variable aleatoria discreta, con función de densidad $f(x)$, entonces
+
+$$ \begin{align*} F \, : & \, \mathbb{R} \longrightarrow [0,1] \\ & x \longrightarrow F(x)= P(X \leq x) = \sum \limits_{x_i \leq x} P(X=x_i)=\sum \limits_{x_i \leq x} f(x)  \end{align*}$$
+
+4. Si $X$ es una variable aleatoria continua, con función de densidad $f(x)$, entonces
+
+$$\begin{align*} F \, : & \, \mathbb{R} \longrightarrow [0,1] \\ & x \longrightarrow F(x)= P(X \leq x) = \int_{-\infty}^{x} f(u) \, du \end{align*}$$
+
+Veamos algunos ejemplos
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo caso discreto:</font>
+
+Para el ejemplo del lanzamiento de dos monedas y la variable aleatoria $X$ definida como el número de sellos que se obtiene.
+
+- Si $x<0$, $F(x)=P(X\leq x)=0$
+- Si $0\leq x<1$, $F(x)=P(X\leq x)=P(X = 0)= \frac{1}{4}$
+- Si $1\leq x<2$, $F(x)=P(X\leq x)=P(X = 0)+P(X = 1)= \frac{1}{4}+\frac{2}{4}=\frac{3}{4}$
+- Si $x \geq 2$, $F(x)=P(X\leq x)=P(X = 0)+P(X = 1)+P(X = 2)= \frac{1}{4}+\frac{2}{4}+\frac{1}{4}=1$
+
+$$F(x)= \begin{cases} 0 & si \quad x < 0 \\ \dfrac{1}{4} & si \quad 0\leq x < 1 \\ \dfrac{3}{4} & si \quad 1 \leq x < 2 \\ 1 & si \quad x \geq 2  \end{cases}$$
+por ejemplo
+
+$$F(1.5)=P(X \leq 1.5)=P(X=0)+P(X=1)=\dfrac{1}{4}+\dfrac{2}{4}=\dfrac{3}{4}$$
+
+> <font color = "Magenta" FONT SIZE = 4>Ejemplo caso continuo:</font>
+
+Sea $X$ una variable aleatoria continua con función de densidad
+
+$$f(x)= \begin{cases} 2x & si \quad 0<x<1 \\ 0 & \text{en otro caso} \end{cases}$$
+Para calcular $F(x)$
+
+$$F(x)=\int_{-\infty}^x f(u)\, du = \begin{cases} 0 & si \quad x<0 \\
+x^2 & si \quad 0 \leq x < 1 \\ 1 & si \quad x \geq 1 \end{cases}$$
+
+
+> <font color = "Magenta" FONT SIZE = 4>**Ejercicio para la casa # 2**</font>:
+
+Vamos a suponer que se lanza un dado corriente 2 veces consecutivas. Tomemos 
+$$Y=\text{''diferencial en valor absoluto de los resultados obtenidos''}$$
+Determine la distrubición de la variable aleatoria $Y$ y la correspondiente función de distribución.
+
+La función de distribución satisface las siguientes propiedades
+
+1. $\lim \limits_{x \to \infty} F(x)=1$
+
+2. $\lim \limits_{x \to -\infty} F(x)=0$
+
+3. $F$ es una función no decreciente, es decir
+
+$$ Si \quad x_1 \leq x_2 \quad entonces \quad F(x_1) \leq F(x_2)$$ 
+ 
+4. $F(x)=F(x+)$. Es decir, si $x_n \longrightarrow 0$ con $x_1 \geq x_2 \geq x_3 \geq \dots \geq 0$ entonces
+
+$$F(x)= \lim \limits_{n \to \infty} F(x+x_n)$$
+
+
+A toda función $F(x) \, : \, \mathbb{R} \longrightarrow \mathbb{R}$ que cumple las cuatro propiedades anteriores se denomina *función de distribución*. Además, si tenemos una función de distribución $F(x)$, entonces existe $\Omega$ y una variable aleatoria $X$ definida sobre $\Omega$ tal que $X$ tiene como función de distribución a $F(x)$.
+
+La función $F(x)$ es importante en el cálculo de probabilidades
+
+1. $P(x \leq a) =F(a)$
+
+2. $P(x > a) = 1- F(a)$
+
+3. $P(x < a) =F(a-)$
+
+4. $P(a < x \leq b) = F(b)-F(a)$
+
+> <font color = "Magenta" FONT SIZE = 4>**Ejercicio para la casa # 3**</font>:
+
+Considere una variable aleatoria con función de densidad dada por:
+
+$$f(x)= \begin{cases} \alpha x\left(2-x \right) & si \text{  $0\leq x\leq2$} \\ 0 & \text{en otro caso} \end{cases}$$
+Determinar:
+
+1. El valor de $\alpha$.
+2. La función de distribución de la variable aleatoria $X$.
+3. $P(-1\leq X\leq 1/2)$.
+
+<font color = "blue" FONT SIZE = 5>***Parámetros de una Variable Aleatoria***</font>
+
+
+De manera análoga de las variables estadísticas, trabajaremos en está sección algunos parámetros que resumen numéricamente las distribuciones de las variables aleatorias. 
+
+Trabajaremos los dos casos: discreto y continuo.
+
+<font color = "blue" FONT SIZE = 4>**Media o Valor esperado de una variable aleatoria discreta**</font>:
+
+Sea $X$ una variable aleatoria discreta que toma valores $\{x_1,x_2,x_3, \dots, x_n\}$ con distribución de probabilidad $f(x_i)=P(X=x_i)=P_i$. La media o valor esperado de $X$ está dado por
+
+$$\mu = E(X)= \sum \limits_{x_i} x_if(x_i)= \sum \limits_{x_i} x_iP(X=x_i) \, ,$$
+donde la suma se toma sobre todos los elementos de la variable aleatoria $X$.
+
+> <font color = "Magenta" FONT SIZE = 4>**Ejemplo:**</font>:
+
+En el experimento de lanzar dos monedas y la variable aleatoria $X$ definida como el número de sellos obtenidos. Recordemos que: $x_1=0 , x_2=1 , x_3=2$ y por tanto $P(X=0)=1/4$ , $P(X=1)=2/4$ y $P(x=2)=1/4$. Por lo tanto, de acuerdo a la definición de la esperanza
+
+$$E[X]= \sum \limits_{x_i} x_iP(X=x_i) = 0. \dfrac{1}{4}+1. \dfrac{2}{4}+2.\dfrac{1}{4}= 1 $$
+
+> <font color = "Magenta" FONT SIZE = 4>**Ejercicio para la casa # 4**</font>:
+
+Calcular el valor esperado de $X$ una variable aleatoria discreta con función de probabilidad
+
+$$f(x)= \begin{cases} \left(\dfrac{1}{2} \right)^x & si \quad x=1,2,3, \dots \\ 0 & \text{en otro caso} \end{cases}$$
+
+<font color = "blue" FONT SIZE = 4>***Media o Valor esperado de una 
+variable aleatoria continua***</font>:
+
+Sea $X$ una variable aleatoria continua con función de densidad $f(x)$, se define la esperanza matemática de esa variable aleatoria como:
+
+$$E[X]= \int_{-\infty}^{\infty} xf(x) \, dx = \mu $$
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo***</font>: Consideremos una variable aleatoria continua $X$, con función de densidad
+
+$$f(x)= \begin{cases} 2x  & si \quad 0 < x \leq 1 \\ 0 & \text{en otro caso}   \end{cases}$$
+Entonces,
+
+$$\begin{align*} E[X] & = \int_{-\infty}^{\infty} xf(x) \, dx \\ &= \int_{0}^{1} x2x \, dx \\ & =  \int_{0}^{1} 2x^2 \, dx \\ & = 2\dfrac{x^3}{3} \bigg |_0^1  \\ & = \dfrac{2}{3}  \end{align*}$$
+Propiedades de la Esperanza de una Variable Aleatoria
+
+1. $E(C)=C$, donde $C$ es una constante.
+
+2. $E(cX)=cE(X)$
+
+3. $E(aX+b)=aE(X)+b$
+
+4. Si $g(x)$ es una función de $X$, entonces
+
+ - $E[g(X)]= \sum \limits_{i=1}^{\infty} g(x_i)P_i$
+
+ - $E[g(X)]= \int_{-\infty}^{\infty} g(x)f(x) \, dx$
+
+5. Si $X_1, X_2, \dots, X_n$ son variables aleatorias, entonces
+
+$$E\left[\sum \limits_{i=1}^{n} X_i \right] = \sum \limits_{i=1}^{n} E[X_i]$$
+
+
+<font color = "blue" FONT SIZE = 4>***Varianza de una variable aleatoria***</font>:
+
+Dada una variable aleatoria $X$ se define la varianza en los dos casos:
+
+- Discreto
+
+$$ \begin{align*} \sigma^2 & = V(X) \\ & = E([X-\mu]^2) \\ &= E(X^2-2\mu X+\mu^2) \\ & = E[X^2]-2\mu E[X]+\mu^2 \\ & = E[X^2]-2\mu^2+\mu^2 \\ & = E[X^2]-\mu^2 \end{align*}$$
+
+donde la suma se toma sobre todos los valores de la variable aleatoria $X$.
+
+- Continua
+
+$$ \sigma_X^2=V(X)=E([X-\mu]^2)= \int_{-\infty}^{\infty} (x- \mu)^2 f(x) \, dx $$
+
+También podemos definir la desviuación estándar como
+
+$$\sigma(X)=\sqrt{\sigma_X^2}=\sqrt{V(X)}$$
+
+</div>

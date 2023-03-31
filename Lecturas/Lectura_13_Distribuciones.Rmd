@@ -1,0 +1,758 @@
+<div style="text-align: justify">
+
+## **Fundamentos de estadística para analítica de Datos.**
+
+## ***Lectura 13: Distribuciones.***
+
+### ***Docente: Luis Andres Campos Maldonado.***
+
+> ## _Software de apoyo: `R.`_
+
+
+
+
+<font color = "blue" FONT SIZE =7> _Distribuciones._ </font>
+
+Vamos a considerar algunas distribuciones que serán de uso en lo que resta del curso.
+
+- Distribución Binomial.
+- Distribución Normal.
+
+```{r,echo=TRUE,message=FALSE}
+library(tidyverse)
+```
+<font color = "blue"FONT SIZE = 6>***Distribución de Bernoulli.***</font>
+
+
+Una variable de Bernoulli se da cuando en un experimento aleatorio tenemos solo dos resultados posibles: 
+
+- $E$ evento llamado : **éxito**
+
+- $E^c$ evento llamado : **fracaso**
+
+En este caso, si $P(E)=p$ entonces $P(E^c)=1-p$
+
+Una Variable Aleatoria definida así:
+
+$$\begin{align*} X \,  :& \, \Omega \longrightarrow \mathbb{R} \\ & \omega \longrightarrow X(\omega)= \begin{cases} 1 & si \quad \omega=E \\ 0 & si \quad \omega=E^c  \end{cases} \end{align*}$$
+se le llama *variable aleatoria de Bernoulli* de parámetro $p$: $X \sim B(p)$
+
+Además, la función de densidad está dada por :
+
+$$f(x)= \begin{cases} 1-p & si \quad x=0 \\ p & si \quad x=1 \\ 0 & \text{en otro caso}  \end{cases} = \begin{cases} p^x(1-p)^{1-x} & si \quad x=0,1 \\ 0 & \text{en otro caso} \end{cases}$$
+y la distribución de probabilidad
+
+$$F(x)= \begin{cases} 0 & si \quad x<0 \\ 1-p & si \quad 0 \leq x < 1 \\ 1 & si \quad x \geq 1  \end{cases}$$
+El valor esperado o la esperanza de la variable aleatoria está dado por:
+
+$$\begin{align*} E(X) & =\sum \limits_{x} xf(x) \\ & = 0.(1-p)+1.p \\ & =  p \end{align*}$$ 
+Por otro lado,la varianza 
+
+$$\begin{align*} Var(X) & =E(X^2)-E(X)^2 \\ & = \sum \limits_{x} x^2f(x) - p^2 \\& =  0^2(1-p)+1^2(p)-p^2 \\ & =p-p^2 \\ & = p(1-p) \end{align*}$$
+
+>  <font color = "Magenta" FONT SIZE = 4>***Ejemplo 1.***</font>
+
+Vamos a simular una variable aleatoria de Bernoulli, haciendo uso de $R$ con la instrucción *rbinom(n,1,p)*, donde $n$ es número de simulaciones del experimento y $p$ es la probabilidad de éxito.
+
+```{r}
+rbinom(10,1,0.3)
+```
+
+```{r}
+x = rbinom(100000,1,0.3) # Simulamos 100000 veces el experimento
+y = prop.table(table(x)) # Frecuencias relativas
+barplot(y, 
+        main = "Frecuencias relativa\n simulación n=100000, eventos de Bernoulli",
+        col = "skyblue",
+        names.arg = c(0,1),
+        ylim = c(0,max(y)+0.05))
+
+```
+
+Note que en la situación anterior se espera que al realizar múltiples veces el experimento el total de éxitos es del 30% aproximadamente. Recuerde que el valor esperado es 0.3 y la varianza es 0.21.
+
+
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo 2 (Bernoulli).***</font>
+
+Al lanzar una moneda los dos eventos posibles son cara y sello. Si asignamos los valores de $1$ y $0$ obtenemos una variable aleatoria que se distribuye Bernoulli. 
+
+```{r}
+dbinom(0:1,size=1,prob = 0.5) # Probabilidad de cara y Sello.
+```
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo 3 (Bernoulli).***</font>
+
+En un lote de $400$ piñones se selecciona un piñon al azar, determinaremos si está defectuoso o no. Si sabemos que en el lote hay $100$ piñones  defectuosos y $E$ = "el piñon extraído es defectuso", entonces
+
+$$P(E)=\dfrac{100}{400}=\dfrac{1}{4}$$
+
+Esto nos permite definir una variable aleatoria con $X(E)=1$ y $X(E^c)=0$. Además, 
+
+- $P(X=1)=p=\dfrac{1}{4}$ y $P(X=0)=\dfrac{300}{400}=\dfrac{3}{4}$
+
+En este caso, $X \sim B(1/4)$
+
+<font color = "blue"FONT SIZE = 6>***Distribución Binomial.***</font>
+
+
+La distribución binomial se obtiene a partir de la realización de $n$ experimentos de Bernoulli de manera sucesiva, teniendo en cuenta que cada evento es independiente del anterior.
+
+Definimos la variable aleatoria
+
+$X$= número de éxitos en las $n$ pruebas. 
+
+Si consideramos que $p$ es la probabilidad de éxito, entonces se dice que $X$ se distribuye Binomial con parámetros $n$ y $p$, y se denota
+
+$$X \sim B(n,p)$$
+
+La variable $X$ puede tomar los valores $0,1,2, \dots, n$. Además, la probabilidad se calcula de la siguiente manera:
+
+- Probabilidad que en $n$ intentos de un experimento aletario, no se obtenga "éxito"
+
+$$P(X=0)=(1-p)^{n}$$ 
+
+es decir, todos son intentos son fracasos.
+
+- Probabilidad que en $n$ intentos de un experimento aletario, se obtenga una vez "éxito"
+
+$$P(X=1)= \binom{n}{1}p(1-p)^{n-1} $$
+En general
+
+$$P(X=k)= \binom{n}{k}p^{k}(1-p)^{n-k} $$
+La distribución Binomial se da en ciertas características:
+
+- En cada ensayo o experimento solo hay dos posibles resultados: éxito o fracaso.
+
+- La probabilidad de éxito es constante. 
+
+- El resultado de cada experimento es independiente del anterior.
+
+- Los sucesos son mutuamente excluyentes.
+
+Además, usando la definición, es posible deducir lo siguiente
+
+- $E[X]=np$
+
+- $Var[X]=np(1-p)$
+
+Veamos un par de ejemplos
+
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo 1 (Binomial).***</font>
+
+Supongamos que el $70 \%$ de personas de una ciudad ha visto la final de fútbol de los equipos de la región. En una reunión, cinco personas comparten experiencias. ¿Cuál es la probabilidad de que 3 de ellos hayan visto el partido de Fúlbol?
+
+**Solución:** Dado el problema tenemos los siguientes datos:
+
+- $n=5$
+
+- $X$: es el número de éxitos.
+
+- $p=0.7$: probabilidad de éxito, es decir, de que una persona haya visto el partido.
+
+- Nos preguntan : $P(X=3)$
+
+$$P(X=3)= \binom{5}{3}(0.7)^{3}(0.3)^{2}$$
+
+Antes de calcular la probabilidad, simulemos el experimento:
+
+```{r}
+set.seed(1) # Semilla para reproducir resultados.
+rbinom(20,5,0.7) # rbinom(N,n,p); N = número de simulaciones, n parámetro de la binomial, p = proba de éxito evento Bernoulli.
+                 
+```
+
+Para calcular este valor en $R$, usamos la instrucción *dbinom(x,n,p)*, donde $x$ es el valor de la variable aleatoria, $n$ es el número de ensayos independientes y $p$ es la probabilidad de éxito de cada ensayo.
+```{r}
+dbinom(3,5,0.7)
+```
+La anterior es la probabilidad buscada.
+
+***Observe lo siguiente:***
+
+```{r}
+dbinom(0:5,5,0.7) ## Las probabilidades de x=0, hasta x=5.
+```
+```{r}
+dbinom(c(1,4,5), 5, 0.7) ## P(X=1), P(X=4), P(X=5)
+```
+```{r}
+sum(dbinom(0:5,5,0.7)) # La suma de las probabilidades debe ser 1.
+```
+Para calcular probabilidades binomiales *acumuladas* en R , usamos el comando *pbinom(x,n,p)*
+
+$$pbinom(x,n,p)=P(X \leq x)=P(X=0)+P(X=1)+\dots + P(X=x)$$
+
+```{r}
+pbinom(2,5,0.7) # P(X=0)+P(X=1)+P(X=2) = P(X <= 2); pbinom: Función de distribución acumulada
+
+```
+```{r}
+dbinom(0:2,5,0.7) # P(X=0), P(X=1) y P(X=2)
+```
+```{r}
+sum(dbinom(0:2,5,0.7)) # P(X<=2)
+```
+```{r}
+pbinom(2,5,0.7, lower.tail = F)# P(X>2)=1-P(X <=2)
+```
+
+```{r}
+dbinom(3:5, 5, 0.7)
+sum(dbinom(3:5, 5, 0.7)) # P(X=3)+P(X=4)+P(X=5)
+```
+```{r}
+pbinom(1,5,0.7, lower.tail = F) # P(X > 1)=P(X >= 2)
+1- (dbinom(0,5,0.7)+dbinom(1,5,0.7)) # P(X>=2) = 1 - [P(X=0)+P(X=1)]
+```
+
+
+<font color = "red" FONT SIZE = 5> ***Veamos algunas representaciones (histogramas de la variable)***</font>
+
+
+```{r}
+x = 0:5
+prob = dbinom(x,5,0.7)
+barplot(prob,col = "red", ylim = c(0,0.4),
+        names.arg=x,
+        main="Binomial Distribution (n=5,p=0.7)")
+```
+
+```{r}
+x = 0:8
+prob = dbinom(x,8,0.5)
+barplot(prob,col = "pink", ylim = c(0,0.3),
+        names.arg=x,
+        main="Binomial Distribution (n=8,p=0.5)")
+```
+
+```{r}
+x = 0:10
+prob = dbinom(x,10,0.2)
+barplot(prob,col = "yellow",ylim = c(0,0.3),
+        names.arg=x,
+        main="Binomial Distribution (n=10,p=0.2)")
+```
+
+¿Donde se presenta la probabilidad más alta?
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo 2 (Binomial).***</font>
+
+Se acusa a una persona de un crimen y se lleva a un juicio con un jurado de 15 personas. Para ser condenado se requien que al menos 10 personas del jurado voten culpable. Cada jurado dejará su voto al azar y lo determinará con el lanzamiento de una moneda. Si cae cara es culpable y cae sello es inocente. ¿Cuál es la probabilidad de que el acusado sea declarado culpable?
+
+**Solución:** Definimos el evento $A$: obtener sello en el lanzamiento o de otra manera "inocente". Es decir,  $p(A)=0.5$ en un intento.
+
+- $X$ será el numéro de éxitos, (obtener sello) en $15$ intentos.
+
+Para que el acusado salga inocente debe obtener por lo menos $10$ veces sellos, es decir: $X \geq 10$.
+
+Luego,
+
+$$P(X \geq 10)= \sum \limits_{k=
+10}^{15} \binom{15}{k} \left (\dfrac{1}{2} \right )^k \left( \dfrac{1}{2} \right)^{15-k}$$
+
+
+
+```{r}
+dbinom(10:15, 15, 0.5)
+sum(dbinom(10:15, 15, 0.5))
+pbinom(9, 15, 0.5 , lower.tail = F) # P(X>9)
+```
+
+```{r}
+pbinom(15,15,0.5)-pbinom(9,15,0.5) # P(X<=15)-P(X<=9)
+sum(dbinom(10:15,15,0.5)) # P(X=10)+P(X=11)+...+P(X=15)
+```
+
+#########################################################################################
+#########################################################################################
+#########################################################################################
+
+<font color = "blue"FONT SIZE = 6>***Distribución Normal.***</font>
+
+
+La distribución normal o distribución Gaussiana es una de las más importantes distribuciones continuas, ya que muchos fenómenos se pueden modelar por medio de una distribución normal. Esta distribución tiene dos parámetros fundamentales:
+
+- $\mu$: media de la distribución.
+
+- $\sigma$: desviación típica o estándar de la distribución. ($\sigma^2$: varianza)
+
+Cuando una variable sigue una distribución normal se denota $X \sim N(\mu, \sigma^2)$
+
+La ecuación que describe la distribución normal (forma de campana de Gauss) viene dada por la siguiente función.
+
+$$f(x)=\dfrac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$
+
+
+Para trabajar en R usamos la instrucción $dnorm(x, \mu, \sigma)$ , $pnorm(x, \mu, \sigma)$ , $rnorm(x, \mu, \sigma)$ y $qnorm(q, \mu, \sigma)$
+
+-  $dnorm(x, \mu, \sigma)$ : valor puntual de la función $f(x)$. Sin embargo, recordemos que en términos de la probabilidad este valor es cero.
+
+- $pnorm(x, \mu, \sigma)$ : probabilidad acumulada hasta $x$
+
+- $rnorm(n, \mu, \sigma)$ : valores aleatorios en una distribución normal.
+
+- $qnorm(q, \mu, \sigma)$ : cuantil $q$
+
+**Observación:** Cuando $\mu=0$ y $\sigma=1$ la distribución $X \sim N(0,1)$ se denomina Normal estándar o tipificada.
+
+<font color = "blue"FONT SIZE = 5>***Teorema:***</font>
+
+Si $X \sim N(\mu, \sigma^2)$ entonces $\frac{X-\mu}{\sigma} \sim N(0,1)$
+
+
+
+```{r}
+dnorm(2,3,4)
+pnorm(2,3,4)
+rnorm(20,3,4)
+qnorm(0.95,0,1)
+qnorm(0.5,3,4)
+qnorm(0.7,3,4)
+```
+
+```{r, echo=F}
+hist(rnorm(10000, mean = 0, sd=1), # Simulación de una normal estandar
+     freq=F,
+     ylim = c(0,0.5), 
+     xlim = c(-4,4), 
+     col = "cadetblue1", 
+     main= "Distribución Normal estandar" , xlab= "Variable", ylab = "Densidad",
+     ) 
+     
+curve(dnorm(x, mean=0, sd=1), 
+      col="red", 
+      lwd=3, 
+      add=TRUE,
+      yaxt="n") 
+``` 
+
+
+Recordemos que la probabilidad en el caso continuo se calcula en intervalos, y esta probabilidad representa el área bajo de curva.
+
+```{r, echo=F, eval=T, include=T}
+mu = 3 # media
+sigma = 2 # desviación estándar
+
+curve(dnorm(x,mu,sigma),
+      xlim=c(mu-7,mu+7), xlab="Z",
+      main="Función de Densidad Normal: P(2 < X < 4)",
+      bty='n', ylab="", yaxt='n',lwd=2)
+
+abline(h=0,lwd=2)
+linf = 2
+lsup = 4
+cord.x = c(linf,seq(linf,lsup,0.01),lsup)
+cord.y = c(0,dnorm(seq(linf,lsup,0.01),mu,sigma),0)
+polygon(cord.x,cord.y, col="skyblue")
+```
+
+
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo 1 (Normal):***</font>
+
+
+En unos estudios realizados a un determinado tipo de aves rapaces. Se comprueba que la longitud de las alas extendidas, $X$, es una variable aleatoria que se distribuye aproximadamente según una curva Normal, de media 110 cms. y desviación típica 4 cms. Elegida un ave al azar y suponiendo que las longitudes se distribuyen normalmente, calcular:
+
+a) La probabilidad de que la longitud de las alas esté comprendida entre 110 y 115 cm.
+
+b) La probabilidad de que la longitud de las alas sea mayor que 105 cm.
+
+c) La probabilidad de que la longitud de las alas sea menor de 100 cm.
+
+d) La longitud mínima  del 20% de las alas que más miden
+
+e) Quince longitudes aleatorias que sigan dicha distribución. 
+
+**Solución:**
+
+Primero simulemos 20 elementos de esa variable aleatoria:
+
+```{r}
+set.seed(-100)
+rnorm(20,110,4)
+```
+Además el histograma de la múltiples simulaciones:
+
+```{r}
+set.seed(2)
+hist(rnorm(100000,110,4),
+     main = "", ylab = "Frecuencia", xlab =" ",
+     ylim = c(0,20000))
+```
+
+
+a) $P(110 \leq X \leq 115)=P(X \leq 115)- P(X \leq 110)$
+
+```{r}
+pnorm(115,110,4)-pnorm(110, 110,4)
+pnorm(1.25)-pnorm(0) # Estandarización
+```
+
+b) $P(X \geq 105)$
+
+```{r}
+pnorm(105,110,4, lower.tail = F) # P(X>=105)
+```
+
+c) $P(X \leq 100)$
+
+```{r}
+pnorm(100,110,4)
+```
+
+d) La longitud mínima del $20\%$ de las alas que más miden 
+
+Ordenamos los valores de menor a mayor, buscamos el $20\%$ de los valores más grandes de la variable. El valor mínimo de estos valores deja a la izquierda el $80\%$ de los valores de mediciones de las alas.
+Es decir, debemos calcular el percentil $80$.
+
+```{r}
+qnorm(0.8, 110, 4)
+```
+
+
+>  <font color = "Magenta" FONT SIZE = 4>***Ejercicio para casa:***</font>
+
+En enero de 2003 un empleado estadounidense pasaba, en promedio, 77 horas conectado a Internet durante las horas de trabajo (CNBC, 15 de marzo de 2003). Suponga que la media poblacional es 77 horas, tiempos que están distribuidos normalmente y que la desviación estándar es 20 horas. 
+
+a) ¿Cuál es la probabilidad de que en enero de 2003 un empleado seleccionado aleatoriamente haya pasado menos de 50 horas conectado a Internet?
+
+b) ¿Qué porcentaje de los empleados pasó en enero de 2003 más de 100
+horas conectado a Internet?
+
+c) Un usuario es clasificado como intensivo si se encuentra en el 20%
+superior de uso. ¿Cuántas horas tiene un empleado que haber estado
+conectado a Internet en enero de 2003 para que se le conside un
+usuario intensivo?
+
+> <font color = "magenta" FONT SIZE = 4> ***Ejercicio para la casa:*** </font>
+
+Revisar y desplogar el contenido del enlace.
+
+http://jse.amstat.org/v11n2/datasets.heinz.html
+
+https://bookdown.org/aquintela/EBE/ejemplos-de-la-distribucion-normal.html#los-datos-antropometricos-en-los-seres-humanos
+
+
+
+<font color = "blue"FONT SIZE = 6>***Resultados relacionados con la distribución Normal.***</font>
+
+
+Supongamos que tenemos $X_1$, $X_2$, \dots, $X_n$, $n$ variables aleatorias que se distribuyen normal $X_i \sim N(\mu_i, \sigma_i^2)$, $i=1,2,3, \dots, n$. Entonces
+$$Y=X_1+X_2+ \dots + X_n$$
+se distribuye normal y además
+
+$$Y \sim N\left(\mu_1+\mu_2+\dots+\mu_n, \sigma_1^2+\sigma_2^2+\dots+\sigma_n^2 \right)$$
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo:***</font>
+
+Supongamos que:
+
+- Promedio de la estatura de hombres latinos es $170$ cms con una desviación estándar de $5.8$ cms.
+
+- Promedio de la estatura de hombres europeos es $178$ cms con una desviación estándar de $6.2$ cms.
+
+- Promedio de la estatura de mujeres latinas es $164$ cms con una desviación estandar de $7.2$ cms.
+
+Vamos a escoger una muestra de 4 personas; un hombre latino, europeo y dos mujeres.
+
+```{r}
+set.seed(1)
+x1 = rnorm(1, mean=170, sd=5.8) 
+x2 = rnorm(1, mean=178, sd=6.2) 
+x3 = rnorm(1, mean=164, sd=7.2)
+x4 = rnorm(1, mean=164, sd=7.2) 
+y=x1+x2+x3+x4 
+EST = data.frame(x1,x2,x3,x4,y); EST
+```
+
+Si hacemos este proceso $2.000$ veces los valores de $y$ debería aproximarse a una variable normal. Para esto vamos a usar una estructura de control con un *for*
+
+```{r}
+set.seed(2)
+y = c()
+for (i in 1:2000) {
+x1 = rnorm(1, mean=170, sd=5.8) 
+x2 = rnorm(1, mean=178, sd=6.2) 
+x3 = rnorm(1, mean=164, sd=7.2) 
+x4 = rnorm(1, mean=164, sd=7.2) 
+y[i] = x1+x2+x3+x4
+}
+
+hist(y, freq = F, col = "cadetblue1", main ="Histograma de y=x1+x2+x3+x4",ylim = c(0,0.03))
+
+lines(density(y), # curva de densidad
+      col="red", #color
+      lwd=2 #grosor
+)
+
+legend(700,0.025,  #posición de la etiqueta
+       legend=paste(c("media", "desviación"), round(c(mean(y), sd(y)),2)), #legendas
+       bty = "n", # forma
+       fill = c("blue","green"),  #colores
+       ncol = 1, #columnas
+       cex = 0.8) 
+
+
+```
+
+Comparemos las medias y desviaciones estándar
+
+```{r}
+data.frame(Val1=c(mean(y),sd(y)),
+           Val2=c(170+178+164+164,sqrt(5.8^2+6.2^2+7.2^2+7.2^2)),
+           row.names = c("Media","Desviación"))
+```
+ 
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo:***</font>
+
+Un ascensor tiene una advertencia de capacidad de 1000 Kg. Al ascensor se suben 12 personas, cuyo peso se distribuyen según una distribución normal con media 90 kg y varianza de 10 kg. ¿Cuál es la probabilidad de que se bloquee el ascensor?
+
+**Solución:** Definimos la variable $Y$: peso de las 12 personas que corresponde a la suma de las 12 variables normales $X_i \sim N(90,100)$
+La variable está definida como $Y=X_1+X_2+ \dots + X_{12}$.
+De acuerdo, a lo anterior
+$$Y \sim N(1080, 12 \times 100)= N(1080,1200)$$
+Calculamos $P(Y>1000)$ 
+```{r}
+pnorm(1000, 1080, 34.64, lower.tail=F)
+```
+
+Antes de enunciar el teorema del límite central veamos una definición
+
+<font color = "blue" FONT SIZE = 5>***Función de Probabilidad Conjunta***</font>
+
+Dadas dos variables aletaorias discretas $X$ y $Y$ definidas sobre el mismo espacio de probabilidad de un experimento aleatorio. La función de probabilidad conjunta para cada par $(x,y)$ es
+
+$$P_{XY}(x,y)=P(X=x, Y=y)$$
+
+
+> <font color = "Magenta"FONT SIZE = 4>***Ejemplo:***</font>
+
+- Experimento aleatorio: Tenemos una urna que contiene 4 bolitas rojas, 4 bolitas blancas y se extraen sucesivamente 3 bolitas sin reposición y se registra en orden la extracción, el color de cada bolita extraida.
+
+- Espacio muestral $\Omega=\{bbb,rbb,brb,bbr,rrb,rbr,brr,rrr\}$
+
+- Variables Aleatorias: $X$ y $Y$ definidas por:
+
+   - $X$ : cantidad de bolitas rojas en las dos primeras extracciones.
+   
+   - $Y$ : cantidad de bolitas rojas en la tercera extracción.
+
+**Solución:** Ejercicio en clase.
+
+<font color = "blue" FONT SIZE = 5>***Variables Independientes:***</font>
+
+Un conjunto de variables aleatorias $X_1, X_2, X_3, \dots , X_n$ se dice independientes si:
+
+1. $f_{X_1,X_2, \dots , X_n}(x_1, x_2, \dots , x_n) = f_{X_1}(x_1).f_{X_2}(x_2) \dots f_{X_n}(x_n)$, en particular 
+
+2. $P(X_1=x_1, X_2=x_2, \dots X_n =x_n)=P(X=x_1).P(X=x_2). \dots P(X_n=x_n)$. 
+
+3. $P[(X \leq x) \cap (Y \leq y)]=P(X \leq x)P(Y \leq y)$
+
+
+<font color = "blue" FONT SIZE = 6>***Teorema del Límite Central***</font>
+
+Vimos que la suma de variables que se distribuyen de manera normal, también se distribuye normal. Sin embargo, este resultado se puede extender a variables que no se distribuyen necesariamente normal. 
+
+El teorema del límite central, grosso modo garantiza que si sumamos variables aleatorias cualesquiera, la variable suma seguirá una distribución normal bajo algunas condiciones, como por ejemplo, que sea una suma grande de variables, entre otros.
+
+<font color = "blue"FONT SIZE = 5>***Teorema del Límite Central:***</font>
+
+Sea $X_1,X_2,X_3, \dots , X_n$ un conjunto de variables aleatorias independientes e identicamente distribuidas, cada una de ellas con función de distribución $F$, y supongamos que $E(X_k)=\mu$
+y $Var(X_k)=\sigma^2$ para cualquier elemento del conjunto. Si llamamos
+
+$$S_n=\dfrac{X_1+X_2+X_3+ \dots + X_n - n\mu}{\sigma \sqrt{n}}$$
+entonces la sucesión de sumas normalizadas converge (norma de funciones) a la variable aleatoria Normal Estándar $Z \sim N(0,1)$, es decir, 
+
+$$S_n \longrightarrow Z$$
+Consecuencia importante del teorema: Si consideramos la suma de $n$ variables aleatorias con las condiciones del teorema, es decir, $Y=X_1+X_2+X_3+\dots X_n$, entonces 
+
+$$Y \longrightarrow N(n\mu, n\sigma^2)$$
+
+>  <font color = "Magenta" FONT SIZE = 4>***Ejemplo 1 (TLC aplicado a variables Bernoulli y Binomiales):***</font> 
+
+Si tomamos una sucesión de variables Bernoulli $X_1, X_2, \dots X_n$ tal que cada $X_i \sim Ber_i(p)$ y consideramos  la variable $B_n=X_1+X_2+X_3+ \dots + X_n$, entonces
+
+$$B_n \longrightarrow N(np, np(1-p))$$
+
+Esto se tiene ya que si $X_i \sim Bernoulli(p)$, entonces
+
+- $E[X_i]=p$
+
+- $Var[X_i]=p(1-p)$.
+
+Este resultado es asintótico, es decir, cuando $n$ es muy grande (tiende a infinito).
+
+
+*Vamos realizar una simulación de la situación anterior.*
+
+
+```{r}
+set.seed(2)
+y = c()
+for (i in 1:1000000) {
+y[i]= sum(rbinom(5,1,0.7)) # Simulamos 5 experimentos de Bernouilli.
+}
+barplot(prop.table(table(y)))
+```
+```{r}
+df = data.frame(round(prop.table(table(y)),5)) ## DataFrame con la distrubición de frecuencias relativas
+df = df %>% rename(Aciertos = y, Probabilidad = Freq ); df
+```
+
+Veamos ahora los valores de $X\sim B(5,0.7)$
+
+
+
+```{r}
+dbinom(0:5,5,0.7)
+```
+Observe que son muy próximos (estamos pensando en la probabilidad de manera frecuentista.)
+
+```{r}
+df["Proba_Teorica"] = dbinom(0:5,5,0.7); df
+```
+
+Vamos ahora a simular de la binomial:
+
+```{r}
+set.seed(2)
+y = c()
+for (i in 1:10000) {
+y[i]= sum(rbinom(2000,5,0.7)) # Simulamos 2000 experimentos binomiales. Estamos simulando la suma de variables Binomiales
+}
+hist(y,freq=F,
+     main = "Histograma\nSimulaciones suma Binomiales de parámetros: n=5, p=0.7")
+```
+
+
+```{r}
+data.frame("Teoricos" = c(7000,45.82),
+           "Simulación" = c(round(mean(y),2),round(sd(y),2)),
+           row.names = c("Media","Desviación"))
+```
+
+Finalmente, veamos el TLC con las bernoullis:
+
+```{r}
+set.seed(2)
+y = c()
+for (i in 1:10000) {
+y[i]= sum(rbinom(2000,1,0.7)) # Estamos simulando la suma de 2000 variables Bernoullis. Generamos 2000 simulaciones Bernoulli y sumamos.
+}
+hist(y,freq=F, xlab = " ",
+     main = "Histograma:\nSimulaciones suma de Bernoulli, n=2000, p=0.7")
+```
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo***</font> 
+
+
+En una campaña de vacunación infantil se conoce que aparece algún tipo de efecto secundario en un 13 % de casos. Si se vacunan 1000 niños, ¿cuál es la probabilidad de que más de 100 de ellos tengan alguna reacción a la vacuna?
+
+**Solución:** Asumiendo independencia entre las vacunaciones de los 1000 niños, la distribución exacta de la variable número de niños con reacción respecto de 1000 vacunados sigue una distribución Binomial de parámetros (1000; 0.13)
+
+$$\begin{align*} P(X >100) & = 1- P(X \leq 100) \\ & = 1- \sum \limits_{k=0}^{100} \binom{1000}{k}(0.13)^{k}(1-0.13)^{1000-k} \end{align*}$$
+```{r}
+1-pbinom(100,1000,0.13)
+```
+
+Si usamos el teorema de límite central $X \sim N(np, np(1-p))=N(1000 \times 0.13, 1000 \times (0.13)\times (1-0.13))=N(130,113.1)$, luego:
+
+```{r}
+pnorm(100,130,10.63, lower.tail = F)
+```
+Es decir:
+
+$$P(X>100) \approx 1-P \left (Z \leq \dfrac{100-130}{10.63} \right)=1-P(Z \leq -2.821)=0.9976$$
+
+Veamos la siguiente definición de la distribución muestral de la Media.
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo (Importante)***</font>
+
+**Distribución Muestral de la Media:** Es la distribución de probabilidad de todas las posibles medias de las muestras de un determinado tamaño muestral de la población.
+
+Veamos ejemplos con base a los histogramas
+
+```{r}
+runi = runif(100000,0,1)
+means = c()
+
+for(i in 1:1000){
+  means = c(means,mean(sample(runi,size = 5)))
+}
+
+par(mfrow=c(1,2))
+
+hist(runi, col="pink", main = "Distribución Uniforme")
+
+hist(means, col = "cadetblue1" , main = "Distribucion medias muestrales")
+```
+
+
+```{r}
+rexpon = rexp(10000,10)
+
+means2 = c()
+for(i in 1:1000){
+  means2[i] = mean(sample(rexpon,size = 50))
+  }
+
+par(mfrow=c(1,2))
+hist(rexpon, col = "pink", main= "Distribución Exponencial")
+hist(means2, col = "cadetblue1", main = "Distribución medias muestrales")
+```
+
+
+```{r}
+rbin = rbinom(50,20,0.4)
+means3 = c()
+
+for(i in 1:1000){
+  means3 = c(means3,mean(sample(rbin,size =30)))
+  }
+
+par(mfrow=c(1,2))
+hist(rbin, col="pink", main = "Distribución Binomial n=20")
+hist(means3, col = "cadetblue1" , main = "Distribucion medias muestrales")
+```
+
+<font color = "blue"FONT SIZE = 5>***Teorema del Límite Central:(Media muestral)***</font>
+
+Dada una población y seleccionamos todas las muestras de tamaño $n$, entonces la distribución muestral de la media se aproxima a una distribución normal. 
+
+1. La media de la distribución muestral de medias es exactamente igual a la media poblacional.
+
+2. Hay menos dispersión en la distribución muestral de las medias que en la población. Si $\sigma$ es la desviación estándar de la población, entonces la de la distribución muestral es $\frac{\sigma}{\sqrt{n}}$.
+
+$$Z = \dfrac{\overline{X}-\mu}{\sigma/\sqrt{n}}$$
+
+
+
+> <font color = "Magenta" FONT SIZE = 4>***Ejemplo:***</font>
+
+El departamento de control de calidad de Pepsico, conserva registros sobre la cantidad de bebida de gaseosa en su botella grande; la cantidad real en cada botella es de primordial importancia, pero varía en una mínima cantidad entre estas. La empresa no desea llenar botellas con menos liquido del debido, pues tendría problemas en lo que se refiere a confiabilidad de la marca. Por otra parte, no puede colocar producto de más en las botellas porque lo regalaría, lo cual reduciría sus utilidades. Los registros del departamento de control de calidad indican que la cantidad de gaseosa tiene un distribución de probabilidad normal, la media es $31.2$ onzas y la desviación estándar de la población es $0.4$ onzas. Hoy, el técnico de control de calidad seleccionó al azar 16 botellas de la línea de llenado, la cantidad media de bebida en las botellas es de $31.38$ onzas. ¿Es un resultado poco probable?¿Es probable que el proceso permita colocar demasiado líquido en las botellas?
+
+**Solución:** De acuerdo a los datos del ejercicio: 
+
+- $X$:  cantidad de líquido en las botellas
+
+- $n=16$ : tamaño de las muestras.
+
+- $\mu= 31.2$
+
+- $\sigma = 0.4$
+
+Necesitamos encontrar $P(\overline{X} \geq 31.38 )$. De acuerdo al teorema del límite central 
+
+$$\overline{X} \sim N(\mu, \sigma^2/n)$$
+De ahí, $\overline{x}-\mu=31.38-31.20=0.18$ es el error muestral. Luego 
+
+$$\begin{align*} P(\overline{X} \geq 31.38) & = P\left(\dfrac{\overline{X}-31.20}{0.4/4} \geq \dfrac{31.38-31.20}{0.4/4}\right) \\ & = P(Z \geq 1.8)\end{align*}$$
+Usando R y la instrucción $pnorm(x,\mu, \sigma)$
+```{r}
+pnorm(1.8,lower.tail = F)
+pnorm(31.38, 31.20, 0.1, lower.tail = F)
+```
