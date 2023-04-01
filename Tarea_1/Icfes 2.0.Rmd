@@ -447,7 +447,8 @@ ggplot(icfes, aes(x=FAMI_PERSONASHOGAR, fill=FAMI_TIENEINTERNET)) +
   ylab("") +
   facet_wrap( ~ FAMI_ESTRATOVIVIENDA) +
   theme_minimal() +
-  ggtitle("Núcleo familiar")
+  ggtitle("Núcleo familiar")+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
  
 
 p3 <- ggplot(icfes, fill="red") +
@@ -456,7 +457,8 @@ p3 <- ggplot(icfes, fill="red") +
   scale_x_discrete(labels=c("pro c", "pro in ", "na", "no aplica", "no sabe", "Post","Pri c","Pri in","Secu c","Secu in","tecno c","tecno in"))+
   xlab("") + ylab("") +
   ggtitle("Educación papá") +
-  theme(axis.text.x=element_text(angle=45, hjust=1))
+  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
 
 p4 <- ggplot(icfes, aes(x=FAMI_EDUCACIONMADRE, fill="red")) +
   geom_bar(color='red') +
@@ -464,7 +466,8 @@ p4 <- ggplot(icfes, aes(x=FAMI_EDUCACIONMADRE, fill="red")) +
   xlab("") +
   ylab("") +
   ggtitle("Educación mamá")+
-  theme(axis.text.x=element_text(angle=45, hjust=1))
+  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
 
 ggarrange( p3, p4, ncol=2)
 
@@ -495,9 +498,65 @@ ggplot(icfes_long, aes(x = valor, fill = variable)) +
   scale_fill_hue(name = "Variable",
                  labels = names(icfes_num_1)) +
   labs(x = "Valor", y = "Densidad") +
-  ggtitle("Gráfico de densidad por asignaturas")
+  ggtitle("Gráfico de densidad por asignaturas")+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
 
 
+```
+```{r}
+global <- pg_Genero_M$PUNT_GLOBAL
+ingles <- pg_Genero_M$PUNT_INGLES
+matematicas <- pg_Genero_M$PUNT_MATEMATICAS
+sociales <- pg_Genero_M$PUNT_SOCIALES_CIUDADANAS
+lectura <- pg_Genero_M$PUNT_LECTURA_CRITICA
+ciencias <- pg_Genero_M$PUNT_C_NATURALES
+genero <- pg_Genero_M$ESTU_GENERO
+jornada <- pg_Genero_M$COLE_JORNADA
+ano <- substr(pg_Genero_M$ESTU_FECHANACIMIENTO, start = 7, stop = 10)
+estrato <- pg_Genero_M$FAMI_ESTRATOVIVIENDA
+internet <- pg_Genero_M$FAMI_TIENEINTERNET 
+
+leche <- pg_Genero_M$FAMI_COMELECHEDERIVADOS 
+proteina <- pg_Genero_M$FAMI_COMECARNEPESCADOHUEVO 
+cereales <- pg_Genero_M$FAMI_COMECEREALFRUTOSLEGUMBRE
+computador <- pg_Genero_M$FAMI_TIENECOMPUTADOR
+
+#Creamos el nuevo DF
+puntuacion_df <- data.frame(estrato,leche,global,proteina,cereales,computador)
+
+#Cambiamos los nombres
+colnames(puntuacion_df) <- c("estrato","leche","global","proteina","cereales","computador")
+
+ 
+ggplot(puntuacion_df) +
+  aes(x=global, fill=leche) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / lacteos \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ggplot(puntuacion_df) +
+  aes(x=global, fill=proteina) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / proteinas \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ggplot(puntuacion_df) +
+  aes(x=global, fill=cereales) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / cereales \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ggplot(puntuacion_df) +
+  aes(x=global, fill=computador) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / computador \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ 
 ```
 
 
