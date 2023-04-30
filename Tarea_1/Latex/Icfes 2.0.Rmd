@@ -1,0 +1,567 @@
+
+
+```{r}
+
+rm(list = ls())  
+
+library(readxl)
+
+url <- "https://raw.githubusercontent.com/jusalazar2/R/main/Tarea_1/tablas_dept/BOGOT%C3%81.csv"
+destfile <- "Bogota.csv"
+curl::curl_download(url, destfile)
+icfes <- read.csv2(destfile, sep = ",", dec=".",stringsAsFactors = TRUE)
+#View(icfes)
+
+# Ver variable de un dataframe
+str(icfes)
+
+```
+```{r}
+colnames(icfes)
+```
+```{r}
+#icfes$PUNT_C_NATURALES
+#icfes$PUNT_GLOBAL
+#icfes$PUNT_INGLES
+#icfes$PUNT_LECTURA_CRITICA
+#icfes$PUNT_MATEMATICAS
+#icfes$PUNT_SOCIALES_CIUDADANAS
+
+#Libreria para graficas
+library(plotly)
+#librerias para cargar una imagen
+library(png)
+library(grid)
+
+#img <- readPNG("icfes_easynube.png")
+img <- readPNG("ucentral.png")
+get_img <- rasterGrob(img,interpolate=TRUE)
+
+#Selecionamos la data
+
+pgrafica <- subset(icfes, ESTU_GENERO == c("M","F"),
+                         select = c( `PUNT_C_NATURALES`,`PUNT_GLOBAL`,`PUNT_INGLES`,`PUNT_LECTURA_CRITICA`,`PUNT_MATEMATICAS`,`PUNT_SOCIALES_CIUDADANAS`,`ESTU_GENERO` ))
+
+#Cambiamos el nombre de los encabezados
+
+columnitas <- c("GLOBAL","INGLES","MATEMATICAS","SOCIALES_CIUDADANAS","LECTURA_CRITICA","C_NATURALES","GENERO")
+
+colnames(pgrafica) <- columnitas
+
+p1 <- ggplot(pgrafica) +
+  aes(x=GLOBAL, color=GENERO) +
+  geom_boxplot() +
+  coord_flip() +
+  labs(x = "puntuacion global", y = "genero", title = "Puntuacion global vs genero") + 
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank())
+
+p2 <- ggplot(pgrafica) +
+  aes(x=GLOBAL, color=GENERO) +
+  geom_boxplot() +
+  labs(x = "puntuacion global", y = "genero", title = "Puntuacion global vs genero") + 
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank()) 
+
+library(ggpubr)
+ggarrange(p1, p2, common.legend = TRUE,legend = "bottom",
+          ncol = 2, nrow = 1) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+          
+
+
+```
+
+
+
+
+```{r ,warning=FALSE,cache=FALSE, message=FALSE}
+columnitas <- c("GLOBAL","INGLES","MATEMATICAS","SOCIALES_CIUDADANAS","LECTURA_CRITICA","C_NATURALES","AÑO")
+
+pg_Genero_M <- subset(icfes, ESTU_GENERO == c("M","F"))
+
+global <- pg_Genero_M$PUNT_GLOBAL
+ingles <- pg_Genero_M$PUNT_INGLES
+matematicas <- pg_Genero_M$PUNT_MATEMATICAS
+sociales <- pg_Genero_M$PUNT_SOCIALES_CIUDADANAS
+lectura <- pg_Genero_M$PUNT_LECTURA_CRITICA
+ciencias <- pg_Genero_M$PUNT_C_NATURALES
+genero <- pg_Genero_M$ESTU_GENERO
+ano <- substr(pg_Genero_M$ESTU_FECHANACIMIENTO, start = 7, stop = 10)
+
+#Creamos el nuevo DF
+puntuacion_df <- data.frame(global,genero,ano)
+
+#Cambiamos los nombres
+colnames(puntuacion_df) <- c("global","genero","año")
+
+#filtramos por decadas
+#puntuacion1_df <- subset(puntuacion_df, año == c("2019","2018","2017","2016",,"2015"))
+
+library(DT)
+library(ggpubr)
+
+puntuacion1_df <- puntuacion_df %>% filter(año == c('1980','1981','1982')) 
+
+p1 <- ggplot(puntuacion1_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+puntuacion2_df <- puntuacion_df %>% filter(año == c('1983','1984','1985')) 
+
+p2 <- ggplot(puntuacion2_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("\n Puntuacion global") + ylab("Genero") + ggtitle("") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+ggarrange(p1,p2, common.legend = TRUE,legend = "bottom", 
+          ncol = 1, nrow = 2) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+puntuacion3_df <- puntuacion_df %>% filter(año == c('1986','1987','1988')) 
+
+p3 <- ggplot(puntuacion3_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+puntuacion4_df <- puntuacion_df %>% filter(año == c('1989','1990','1991')) 
+
+p4 <- ggplot(puntuacion4_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("\n Puntuacion global") + ylab("Genero") + ggtitle("") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+ggarrange(p3,p4, common.legend = TRUE,legend = "bottom", 
+          ncol = 1, nrow = 2) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+puntuacion5_df <- puntuacion_df %>% filter(año == c('1992','1993','1994')) 
+
+p5 <- ggplot(puntuacion5_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+puntuacion6_df <- puntuacion_df %>% filter(año == c('1995','1996','1997')) 
+
+p6 <- ggplot(puntuacion6_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("\n Puntuacion global") + ylab("Genero") + ggtitle("") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+ggarrange(p5,p6, common.legend = TRUE,legend = "bottom", 
+          ncol = 1, nrow = 2) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+puntuacion7_df <- puntuacion_df %>% filter(año == c('1998','1999','2000')) 
+
+p7 <- ggplot(puntuacion7_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+puntuacion8_df <- puntuacion_df %>% filter(año == c('2001','2002','2003')) 
+
+p8 <- ggplot(puntuacion8_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("\n Puntuacion global") + ylab("Genero") + ggtitle("") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+ggarrange(p7,p8, common.legend = TRUE,legend = "bottom", 
+          ncol = 1, nrow = 2) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+puntuacion9_df <- puntuacion_df %>% filter(año == c('2004','2005','2006')) 
+
+p9 <- ggplot(puntuacion9_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("\n Puntuacion global") + ylab("Genero") + ggtitle("") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+puntuacion10_df <- puntuacion_df %>% filter(año == c('2007','2008','2009')) 
+
+p10 <- ggplot(puntuacion10_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+ggarrange(p9,p10, common.legend = TRUE,legend = "bottom", 
+          ncol = 1, nrow = 2) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+puntuacion11_df <- puntuacion_df %>% filter(año == c('2010','2011','2012')) 
+
+p11 <- ggplot(puntuacion11_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("\n Puntuacion global") + ylab("Genero") + ggtitle("") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+puntuacion12_df <- puntuacion_df %>% filter(año == c('2013','2014','2015')) 
+
+p12 <- ggplot(puntuacion12_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+ggarrange(p11, common.legend = TRUE,legend = "bottom", 
+          ncol = 1, nrow = 1) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+puntuacion13_df <- puntuacion_df %>% filter(año == c('2016','2017','2018')) 
+
+p13 <- ggplot(puntuacion13_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+puntuacion14_df <- puntuacion_df %>% filter(año == c('2019','2020','2021'))
+
+p14 <- ggplot(puntuacion14_df)+
+  aes(x=global, color=genero) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(~año) +
+  xlab("\n Puntuacion global") + ylab("Genero") + ggtitle("año") +
+  guides(fill=guide_legend(title="Puntuacion global por edad"))
+
+ggarrange(p13,p14, common.legend = TRUE,legend = "bottom", 
+          ncol = 1, nrow = 2) +
+          annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+
+#sumamos columnas
+#colSums(puntuacion_df/length(icfes$PUNT_GLOBAL))
+
+#Comparadores
+# == Igual
+# != No igual
+# <  Menor
+# <= Meno o igual que
+# >  Mayor
+# >= Mayor o igual que
+# |  o
+# !  no
+# %in% Buscar en el Dataset
+
+#summary(icfes$PUNT_GLOBAL)
+```
+```{r ,warning=FALSE,cache=FALSE, message=FALSE}
+library(DT)
+columnitas <- c("GLOBAL","INGLES","MATEMATICAS","SOCIALES_CIUDADANAS","LECTURA_CRITICA","C_NATURALES","AÑO")
+
+pg_Genero_M <- subset(icfes, ESTU_GENERO == c("M","F"))
+
+global <- pg_Genero_M$PUNT_GLOBAL
+ingles <- pg_Genero_M$PUNT_INGLES
+matematicas <- pg_Genero_M$PUNT_MATEMATICAS
+sociales <- pg_Genero_M$PUNT_SOCIALES_CIUDADANAS
+lectura <- pg_Genero_M$PUNT_LECTURA_CRITICA
+ciencias <- pg_Genero_M$PUNT_C_NATURALES
+genero <- pg_Genero_M$ESTU_GENERO
+ano <- substr(pg_Genero_M$ESTU_FECHANACIMIENTO, start = 7, stop = 10)
+
+#Creamos el nuevo DF
+puntuacion_df <- data.frame(global,genero,ano)
+
+#Cambiamos los nombres
+colnames(puntuacion_df) <- c("global","genero","año")
+
+#Filtramos para quitar los estremos vacios
+grafica3 <- filter(puntuacion_df,año > 1970)
+
+ggplot(grafica3)+
+  aes(global, año, colour = genero) + 
+  geom_point() +
+  labs(x = '', y = '', title = 'Puntuacion vs año * genero') +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf) 
+
+BOGOTA_IMA1 <- ggplot(grafica3)+
+  aes(global, año, colour = genero) + 
+  geom_point() +
+  labs(x = '', y = '', title = 'Puntuacion vs año * genero') +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf) 
+
+ggplotly(BOGOTA_IMA1)
+
+#Filtramos para quitar los estremos vacios
+grafica3 <- filter(puntuacion_df,año > 2000 & año < 2005)
+
+BOGOTA_IMA1 <- ggplot(grafica3)+
+  aes(global, año, colour = genero) + 
+  geom_point() +
+  labs(x = '', y = '', title = 'Puntuacion vs año * genero') +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)
+
+ggplotly(BOGOTA_IMA1)
+
+```
+```{r ,warning=FALSE,cache=FALSE, message=FALSE}
+
+library(DT)
+columnitas <- c("GLOBAL","INGLES","MATEMATICAS","SOCIALES_CIUDADANAS","LECTURA_CRITICA","C_NATURALES","AÑO")
+
+pg_Genero_M <- subset(icfes, ESTU_GENERO == c("M","F"))
+
+global <- pg_Genero_M$PUNT_GLOBAL
+ingles <- pg_Genero_M$PUNT_INGLES
+matematicas <- pg_Genero_M$PUNT_MATEMATICAS
+sociales <- pg_Genero_M$PUNT_SOCIALES_CIUDADANAS
+lectura <- pg_Genero_M$PUNT_LECTURA_CRITICA
+ciencias <- pg_Genero_M$PUNT_C_NATURALES
+genero <- pg_Genero_M$ESTU_GENERO
+jornada <- pg_Genero_M$COLE_JORNADA
+ano <- substr(pg_Genero_M$ESTU_FECHANACIMIENTO, start = 7, stop = 10)
+internet <- pg_Genero_M$FAMI_TIENEINTERNET     
+
+#Creamos el nuevo DF
+puntuacion_df <- data.frame(global,jornada,genero,internet)
+
+#Cambiamos los nombres
+colnames(puntuacion_df) <- c("global","jornada","genero","internet")
+
+BOGOTA_IMA1 <- ggplot(puntuacion_df) +
+  geom_histogram(bins=10,fill='lightgreen',col='black') +
+     aes(x = global,y=..density..,) +
+  labs(x = '\n puntuacion global', y = '\n Frecuencias', title = 'Puntuacion vs tipo de jornada') +
+  facet_wrap( ~ jornada) +
+  theme_minimal() +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ggplotly(BOGOTA_IMA1)
+```
+```{r ,warning=FALSE,cache=FALSE, message=FALSE}
+
+library(DT)
+columnitas <- c("GLOBAL","INGLES","MATEMATICAS","SOCIALES_CIUDADANAS","LECTURA_CRITICA","C_NATURALES","AÑO")
+
+pg_Genero_M <- subset(icfes, ESTU_GENERO == c("M","F"))
+
+#pg_Genero_M <- subset(icfes, ESTU_GENERO == c("M","F") & FAMI_ESTRATOVIVIENDA==c('Estrato 1','Estrato 2','Estrato 3','Estrato 4','Estrato 5','Estrato 6'))
+
+global <- pg_Genero_M$PUNT_GLOBAL
+ingles <- pg_Genero_M$PUNT_INGLES
+matematicas <- pg_Genero_M$PUNT_MATEMATICAS
+sociales <- pg_Genero_M$PUNT_SOCIALES_CIUDADANAS
+lectura <- pg_Genero_M$PUNT_LECTURA_CRITICA
+ciencias <- pg_Genero_M$PUNT_C_NATURALES
+genero <- pg_Genero_M$ESTU_GENERO
+jornada <- pg_Genero_M$COLE_JORNADA
+ano <- substr(pg_Genero_M$ESTU_FECHANACIMIENTO, start = 7, stop = 10)
+estrato <- pg_Genero_M$FAMI_ESTRATOVIVIENDA
+
+#Creamos el nuevo DF
+puntuacion_df <- data.frame(estrato,jornada,genero)
+
+#Cambiamos los nombres
+colnames(puntuacion_df) <- c("estrato","jornada","genero")
+
+ggplot(puntuacion_df) +
+  aes(x=genero, fill=jornada) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por estrato y genero / jornada \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+```
+```{r}
+
+library(DT)
+columnitas <- c("GLOBAL","INGLES","MATEMATICAS","SOCIALES_CIUDADANAS","LECTURA_CRITICA","C_NATURALES","AÑO")
+
+pg_Genero_M <- subset(icfes, ESTU_GENERO == c("M","F") & FAMI_TIENEINTERNET == c("Si","No"))
+
+#pg_Genero_M <- subset(icfes, ESTU_GENERO == c("M","F") & FAMI_ESTRATOVIVIENDA==c('Estrato 1','Estrato 2','Estrato 3','Estrato 4','Estrato 5','Estrato 6'))
+
+global <- pg_Genero_M$PUNT_GLOBAL
+ingles <- pg_Genero_M$PUNT_INGLES
+matematicas <- pg_Genero_M$PUNT_MATEMATICAS
+sociales <- pg_Genero_M$PUNT_SOCIALES_CIUDADANAS
+lectura <- pg_Genero_M$PUNT_LECTURA_CRITICA
+ciencias <- pg_Genero_M$PUNT_C_NATURALES
+genero <- pg_Genero_M$ESTU_GENERO
+jornada <- pg_Genero_M$COLE_JORNADA
+ano <- substr(pg_Genero_M$ESTU_FECHANACIMIENTO, start = 7, stop = 10)
+estrato <- pg_Genero_M$FAMI_ESTRATOVIVIENDA
+internet <- pg_Genero_M$FAMI_TIENEINTERNET           
+
+#Creamos el nuevo DF
+puntuacion_df <- data.frame(estrato,internet,genero)
+
+#Cambiamos los nombres
+colnames(puntuacion_df) <- c("estrato","internet","genero")
+
+ggplot(puntuacion_df) +
+  aes(x=genero, fill=internet) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por estrato y genero / internet \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+```
+```{r}
+library(ggplot2)
+
+ggplot(icfes, aes(x=FAMI_PERSONASHOGAR, fill=FAMI_TIENEINTERNET)) +
+  geom_bar() +
+  scale_x_discrete(labels=c("1,2","3,4","5,6","7,8","9,+"))+
+  xlab("") +
+  ylab("") +
+  facet_wrap( ~ FAMI_ESTRATOVIVIENDA) +
+  theme_minimal() +
+  ggtitle("Núcleo familiar")+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
+ 
+
+p3 <- ggplot(icfes, fill="red") +
+  aes(x=FAMI_EDUCACIONPADRE)+
+  geom_bar(color = 'blue') + 
+  scale_x_discrete(labels=c("pro c", "pro in ", "na", "no aplica", "no sabe", "Post","Pri c","Pri in","Secu c","Secu in","tecno c","tecno in"))+
+  xlab("") + ylab("") +
+  ggtitle("Educación papá") +
+  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
+
+p4 <- ggplot(icfes, aes(x=FAMI_EDUCACIONMADRE, fill="red")) +
+  geom_bar(color='red') +
+  scale_x_discrete(labels=c("pro c", "pro in ", "na", "no aplica", "no sabe", "Post","Pri c","Pri in","Secu c","Secu  in","tecno c","tecno in"))+
+  xlab("") +
+  ylab("") +
+  ggtitle("Educación mamá")+
+  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
+
+ggarrange( p3, p4, ncol=2)
+
+
+
+
+```
+```{r}
+
+# Estadística descriptiva detallada
+library(psych)
+library(tidyr)
+library(dplyr)
+
+# Seleccionar solo las variables numéricas
+icfes_num <- icfes[, sapply(icfes, is.numeric)]
+
+# Excluir la variable PUNT_GLOBAL
+icfes_num_1 <- select(icfes_num, -PUNT_GLOBAL)
+
+# Convertir datos de ancho a largo
+icfes_long <- gather(icfes_num_1, key = "variable", value = "valor")
+
+# Hacer el gráfico de densidad
+ggplot(icfes_long, aes(x = valor, fill = variable)) + 
+  geom_density(alpha = 0.5) +
+  theme_classic() +
+  scale_fill_hue(name = "Variable",
+                 labels = names(icfes_num_1)) +
+  labs(x = "Valor", y = "Densidad") +
+  ggtitle("Gráfico de densidad por asignaturas")+
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)#
+
+
+```
+```{r}
+global <- pg_Genero_M$PUNT_GLOBAL
+ingles <- pg_Genero_M$PUNT_INGLES
+matematicas <- pg_Genero_M$PUNT_MATEMATICAS
+sociales <- pg_Genero_M$PUNT_SOCIALES_CIUDADANAS
+lectura <- pg_Genero_M$PUNT_LECTURA_CRITICA
+ciencias <- pg_Genero_M$PUNT_C_NATURALES
+genero <- pg_Genero_M$ESTU_GENERO
+jornada <- pg_Genero_M$COLE_JORNADA
+ano <- substr(pg_Genero_M$ESTU_FECHANACIMIENTO, start = 7, stop = 10)
+estrato <- pg_Genero_M$FAMI_ESTRATOVIVIENDA
+internet <- pg_Genero_M$FAMI_TIENEINTERNET 
+
+leche <- pg_Genero_M$FAMI_COMELECHEDERIVADOS 
+proteina <- pg_Genero_M$FAMI_COMECARNEPESCADOHUEVO 
+cereales <- pg_Genero_M$FAMI_COMECEREALFRUTOSLEGUMBRE
+computador <- pg_Genero_M$FAMI_TIENECOMPUTADOR
+
+#Creamos el nuevo DF
+puntuacion_df <- data.frame(estrato,leche,global,proteina,cereales,computador)
+
+#Cambiamos los nombres
+colnames(puntuacion_df) <- c("estrato","leche","global","proteina","cereales","computador")
+
+ 
+ggplot(puntuacion_df) +
+  aes(x=global, fill=leche) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / lacteos \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ggplot(puntuacion_df) +
+  aes(x=global, fill=proteina) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / proteinas \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ggplot(puntuacion_df) +
+  aes(x=global, fill=cereales) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / cereales \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ggplot(puntuacion_df) +
+  aes(x=global, fill=computador) +
+  geom_bar() +
+  facet_wrap( ~ estrato) +
+  labs(y="cantidad",x="Estrato",title="presentacion de examen por global y esrato / computador \n") +
+  annotation_custom(get_img,xmin=-Inf,xmax=Inf,ymin=-Inf,ymax=Inf)# elimina grid de fondo
+
+ 
+```
+
+
+
+
+
+
+
